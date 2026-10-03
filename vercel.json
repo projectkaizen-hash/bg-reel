@@ -1,8 +1,5 @@
 {
   "rewrites": [
-    {
-      "source": "/wp-json/news-reel/v1/:path*",
-      "destination": "https://banglagazeta.com/wp-json/news-reel/v1/:path*"
-    }
+    { "source": "/wp-json/:path*", "destination": "https://banglagazeta.com/wp-json/:path*" }
   ]
 }
