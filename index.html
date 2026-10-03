@@ -11,13 +11,22 @@ tailwind.config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'Noto Sans Bengali', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'VarendraAP', 'Noto Sans Bengali', 'system-ui', 'sans-serif'],
       },
     },
   },
 }
 </script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+@font-face {
+  font-family: 'VarendraAP';
+  src: url('VarendraAP-Regular_v4.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+</style>
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -168,7 +177,7 @@ body{margin:0;font-family:"Inter","Noto Sans Bengali",system-ui,-apple-system,sa
         <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 mb-4">
           <div id="renderProgress" class="bg-slate-900 dark:bg-slate-50 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
         </div>
-        <p class="text-xs text-slate-400 dark:text-slate-500" id="renderTime">Estimated time: Calculating... (60fps, 20Mbps)</p>
+        <p class="text-xs text-slate-400 dark:text-slate-500" id="renderTime">Estimated time: Calculating... (30fps, 10Mbps)</p>
       </div>
 
       <!-- Complete State -->
@@ -208,7 +217,7 @@ body{margin:0;font-family:"Inter","Noto Sans Bengali",system-ui,-apple-system,sa
 var SITE="https://banglagazeta.com", API_KEY="DjVf3drWcsQjwlsjv3Y82M0214VaEiFK1QPORd3f", API="/wp-json/news-reel/v1";
 
 var W=1080,H=1920,INTRO=3,OUTRO=3.4,WIPE=.55;
-var FONT='"Noto Sans Bengali","Hind Siliguri","Kalpurush","Nirmala UI","Noto Sans",sans-serif';
+var FONT='"VarendraAP","Noto Sans Bengali","Hind Siliguri","Kalpurush","Nirmala UI","Noto Sans",sans-serif';
 var KEY="news-reel-studio-v2",BN="০১২৩৪৫৬৭৮৯";
 var MONTHS=["জানুয়ারি","ফেব্রুয়ারি","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগস্ট","সেপ্টেম্বর","অক্টোবর","নভেম্বর","ডিসেম্বর"];
 function bn(n){return String(n).replace(/\d/g,function(d){return BN[d]})}
@@ -240,7 +249,7 @@ function restore(){try{var o=JSON.parse(localStorage.getItem(KEY)||"null");if(o&
 
 /* ---------- images & logo ---------- */
 function loadEl(u){return new Promise(function(res){if(!u){res(null);return}var im=new Image();im.onload=function(){res(im)};im.onerror=function(){res(null)};im.src=u})}
-function fileToDataUrl(file){return new Promise(function(res,rej){var fr=new FileReader();fr.onerror=rej;fr.onload=function(){var im=new Image();im.onerror=rej;im.onload=function(){var sc=Math.min(1,3840/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);var ctx=c.getContext("2d");ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality="high";ctx.drawImage(im,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",1))};im.src=fr.result};fr.readAsDataURL(file)})}
+function fileToDataUrl(file){return new Promise(function(res,rej){var fr=new FileReader();fr.onerror=rej;fr.onload=function(){var im=new Image();im.onerror=rej;im.onload=function(){var sc=Math.min(1,1920/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);var ctx=c.getContext("2d");ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality="high";ctx.drawImage(im,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",.85))};im.src=fr.result};fr.readAsDataURL(file)})}
 async function setPhoto(card,file){try{card.img=await fileToDataUrl(file);card._el=await loadEl(card.img)}catch(e){toast("That image could not be read. Try a JPG or PNG.")}}
 var logoCache={};
 function logoSrc(){return S.logo||"data:image/svg+xml;charset=utf-8,"+encodeURIComponent(logoSvg(S.accent))}
@@ -267,7 +276,7 @@ function particles(lt,alpha){if(!S.motion)return;ctx.save();ctx.fillStyle="#fff"
 function drawPlaceholder(x,y,w,h,A,lt,cat){var g=ctx.createLinearGradient(x,y,x+w,y+h);g.addColorStop(0,mix(A,"#000",.45));g.addColorStop(1,"#0a0d0c");ctx.fillStyle=g;ctx.fillRect(x,y,w,h);ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();ctx.globalAlpha=.16;ctx.fillStyle=A;ctx.beginPath();ctx.arc(x+w*.85,y+h*.22,380+18*Math.sin(lt*1.5),0,Math.PI*2);ctx.fill();ctx.globalAlpha=.09;ctx.beginPath();ctx.arc(x+w*.08,y+h*.7,300,0,Math.PI*2);ctx.fill();if(cat){ctx.globalAlpha=.07;ctx.fillStyle="#fff";ctx.textAlign="center";ctx.textBaseline="middle";ctx.font="800 300px "+FONT;ctx.fillText(cat,x+w/2,y+h*.4)}ctx.restore();ctx.textAlign="left"}
 function wrap(text,maxW,font){ctx.font=font;var words=String(text).split(/\s+/).filter(Boolean),lines=[],cur="";for(var i=0;i<words.length;i++){var t=cur?cur+" "+words[i]:words[i];if(ctx.measureText(t).width>maxW&&cur){lines.push(cur);cur=words[i]}else cur=t}if(cur)lines.push(cur);return lines}
 function fitText(text,maxW,maxLines,maxSize,minSize,weight,lh){var size,font,lines;for(size=maxSize;size>=minSize;size-=4){font=weight+" "+size+"px "+FONT;lines=wrap(text,maxW,font);if(lines.length<=maxLines)return{lines:lines,size:size,font:font,lh:size*lh}}size=minSize;font=weight+" "+size+"px "+FONT;lines=wrap(text,maxW,font);if(lines.length>maxLines){lines=lines.slice(0,maxLines);lines[maxLines-1]=lines[maxLines-1].replace(/\s*\S*$/,"")+"…"}return{lines:lines,size:size,font:font,lh:size*lh}}
-function layoutText(c,maxW,maxH,maxLines){var chipH=70,g1=34,g2=26;for(var size=96;;size-=3){var font="800 "+size+"px "+FONT,lines=wrap(c.head||"",maxW,font);if(lines.length>maxLines&&size>48)continue;var bf=c.blurb?fitText(c.blurb,maxW,3,42,32,"400",1.5):null,hh=lines.length*size*1.32,bh=bf?bf.lines.length*bf.lh:0,total=(c.cat?chipH+g1:0)+hh+(bf?g2+bh:0);if(total<=maxH||size<=48)return{size:size,font:font,lines:lines,bf:bf,hh:hh,bh:bh,total:total,chipH:chipH,g1:g1,g2:g2}}}
+function layoutText(c,maxW,maxH,maxLines){var chipH=70,g1=34,g2=26;for(var size=130;;size-=3){var font="800 "+size+"px "+FONT,lines=wrap(c.head||"",maxW,font);if(lines.length>maxLines&&size>60)continue;var bf=c.blurb?fitText(c.blurb,maxW,3,42,32,"400",1.5):null,hh=lines.length*size*1.15,bh=bf?bf.lines.length*bf.lh:0,total=(c.cat?chipH+g1:0)+hh+(bf?g2+bh:0);if(total<=maxH||size<=60)return{size:size,font:font,lines:lines,bf:bf,hh:hh,bh:bh,total:total,chipH:chipH,g1:g1,g2:g2}}}
 function mo(v){return S.motion?v:1}
 
 /* brand: logo (+ name beside default logo) */
@@ -281,7 +290,7 @@ function textBlock(c,lt,o){
     ctx.save();ctx.globalAlpha=clamp(a);ctx.translate(o.x,cy+L.chipH/2);var s=mo(.6+.4*a);ctx.scale(s,s);ctx.translate(-o.x,-(cy+L.chipH/2));
     rr(o.x,cy,cw,L.chipH,L.chipH/2);ctx.fillStyle=S.accent;ctx.fill();ctx.fillStyle=onAccent(S.accent);ctx.textBaseline="middle";ctx.fillText(c.cat,o.x+28,cy+L.chipH/2+2);ctx.restore();ctx.textBaseline="top";cy+=L.chipH+L.g1}
   ctx.font=L.font;ctx.fillStyle=o.head;
-  for(var i=0;i<L.lines.length;i++){var b=ease(anim(lt,.15+i*.1,.55));ctx.save();ctx.globalAlpha=b;ctx.translate(mo((1-b)*-0+0),mo((1-b)*70));ctx.font=L.font;ctx.fillStyle=o.head;ctx.textBaseline="top";ctx.fillText(L.lines[i],o.x+mo((1-b)*-50),cy+i*L.size*1.32);ctx.restore()}
+  for(var i=0;i<L.lines.length;i++){var b=ease(anim(lt,.15+i*.1,.55));ctx.save();ctx.globalAlpha=b;ctx.translate(mo((1-b)*-0+0),mo((1-b)*70));ctx.font=L.font;ctx.fillStyle=o.head;ctx.textBaseline="top";ctx.fillText(L.lines[i],o.x+mo((1-b)*-50),cy+i*L.size*1.15);ctx.restore()}
   cy+=L.hh;
   if(L.bf){cy+=L.g2;var d0=.3+L.lines.length*.1;for(var k=0;k<L.bf.lines.length;k++){var d=ease(anim(lt,d0+k*.08,.55));ctx.save();ctx.globalAlpha=d;ctx.translate(0,mo((1-d)*40));ctx.font=L.bf.font;ctx.fillStyle=o.sub;ctx.textBaseline="top";ctx.fillText(L.bf.lines[k],o.x,cy+k*L.bf.lh);ctx.restore()}}
 }
@@ -299,13 +308,13 @@ function drawCard(c,lt,d,idx,n){
     ctx.save();ctx.beginPath();ctx.rect(0,0,W,ph);ctx.clip();
     if(c._el)drawCover(c._el,0,0,W,ph,zoom,pan);else drawPlaceholder(0,0,W,ph,S.accent,lt,c.cat);
     var g2=ctx.createLinearGradient(0,0,0,320);g2.addColorStop(0,"rgba(0,0,0,.6)");g2.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=g2;ctx.fillRect(0,0,W,320);ctx.restore();
-    textBlock(c,lt,{x:padX,maxW:maxW,y:ph+64,anchor:"top",maxH:H-190-(ph+64),maxLines:4,head:light?"#14171a":"#fff",sub:light?"#4b5359":"#c5cdc9"});
+    textBlock(c,lt,{x:padX,maxW:maxW,y:ph+64,anchor:"top",maxH:H-190-(ph+64),maxLines:4,head:S.accent,sub:light?"#4b5359":"#c5cdc9"});
     footer(c,light?"#4b5359":"#c5cdc9",H-120,lt);
   }else{
     if(c._el)drawCover(c._el,0,0,W,H,zoom,pan);else drawPlaceholder(0,0,W,H,S.accent,lt,c.cat);
     var g=ctx.createLinearGradient(0,H*.3,0,H);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(.55,"rgba(0,0,0,.74)");g.addColorStop(1,"rgba(0,0,0,.95)");ctx.fillStyle=g;ctx.fillRect(0,H*.3,W,H*.7);
     var g3=ctx.createLinearGradient(0,0,0,320);g3.addColorStop(0,"rgba(0,0,0,.6)");g3.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=g3;ctx.fillRect(0,0,W,320);
-    textBlock(c,lt,{x:padX,maxW:maxW,y:H-190,anchor:"bottom",maxH:1000,maxLines:5,head:"#fff",sub:"#dfe4e1"});
+    textBlock(c,lt,{x:padX,maxW:maxW,y:H-190,anchor:"bottom",maxH:1000,maxLines:5,head:S.accent,sub:"#dfe4e1"});
     footer(c,"rgba(255,255,255,.82)",H-120,lt);
   }
   brandBar(lt);progressBar(idx,n,p);
@@ -319,7 +328,7 @@ function logoHero(lt,cy,h,delay){
 function drawIntro(lt){
   var A=S.accent;bgGrad(A,false);ctx.save();ctx.globalAlpha=.18;ctx.fillStyle=A;ctx.beginPath();ctx.arc(W*.92,H*.12,460+(S.motion?20*Math.sin(lt*2):0),0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(W*.05,H*.88,360,0,Math.PI*2);ctx.fill();ctx.restore();
   particles(lt,.2);logoHero(lt,H*.24,170,.1);
-  var tf=fitText(S.title||"",W-144,3,150,84,"800",1.3),bh=tf.lines.length*tf.lh,y=H*.5-bh/2;
+  var tf=fitText(S.title||"",W-144,3,120,84,"800",1.3),bh=tf.lines.length*tf.lh,y=H-300-bh;
   ctx.fillStyle=A;ctx.fillRect(72,y-64,220*ease(anim(lt,.4,.6)),12);
   for(var i=0;i<tf.lines.length;i++){var a=ease(anim(lt,.5+i*.12,.6));ctx.save();ctx.globalAlpha=a;ctx.translate(mo((1-a)*-60),0);ctx.font=tf.font;ctx.fillStyle="#fff";ctx.textBaseline="top";ctx.textAlign="left";ctx.fillText(tf.lines[i],72,y+i*tf.lh);ctx.restore()}
   var b=ease(anim(lt,.9,.5));ctx.save();ctx.globalAlpha=b;ctx.translate(0,mo((1-b)*40));ctx.textBaseline="top";ctx.textAlign="left";
@@ -362,12 +371,12 @@ function redraw(){draw(Math.min(t,total()-.001));updateUI()}
 var recorder=null,chunks=[],lastBlob=null,lastExt="webm",resUrl=null,recMime="",audioCtx=null,bgSource=null,transSource=null,destNode=null,renderStartTime=0;
 async function ensureFonts(){try{await Promise.all(["800","600","400"].map(function(w){return document.fonts.load(w+' 60px "Noto Sans Bengali"',"বাংলা গেজেটা ০১২৩৪৫৬৭৮৯")}))}catch(e){}}
 async function setupAudioForRecording(){
-  if(!S.enableMusic&&!S.enableSound)return cv.captureStream(60);
+  if(!S.enableMusic&&!S.enableSound)return cv.captureStream(30);
   try{
     audioCtx=new(window.AudioContext||window.webkitAudioContext)({latencyHint:"interactive"});
     var dest=audioCtx.createMediaStreamDestination();
     destNode=dest;
-    var canvasStream=cv.captureStream(60);
+    var canvasStream=cv.captureStream(30);
     var combinedTracks=canvasStream.getTracks();
     if(S.enableMusic&&S.bgMusic){
       var audio=new Audio(S.bgMusic);
@@ -392,7 +401,7 @@ async function setupAudioForRecording(){
     }
     combinedTracks=combinedTracks.concat(dest.stream.getAudioTracks());
     return new MediaStream(combinedTracks);
-  }catch(e){console.warn("Audio setup failed, recording video only",e);return cv.captureStream(60)}
+  }catch(e){console.warn("Audio setup failed, recording video only",e);return cv.captureStream(30)}
 }
 function showRenderModal(){$("renderModal").classList.remove("hidden");$("renderingState").classList.remove("hidden");$("completeState").classList.add("hidden");$("renderProgress").style.width="0%";$("renderStatus").textContent="Preparing to render...";$("renderTime").textContent="Estimated time: Calculating..."}
 function hideRenderModal(){$("renderModal").classList.add("hidden")}
@@ -406,7 +415,7 @@ async function startRec(){
   var cands=["video/mp4;codecs=avc1.640028","video/mp4;codecs=avc1","video/mp4","video/webm;codecs=vp9","video/webm;codecs=vp8","video/webm"];
   recMime=cands.find(function(m){try{return MediaRecorder.isTypeSupported(m)}catch(e){return false}})||"";
   var stream=await setupAudioForRecording();
-  try{recorder=new MediaRecorder(stream,recMime?{mimeType:recMime,videoBitsPerSecond:20000000}:{videoBitsPerSecond:20000000})}catch(e){try{recorder=new MediaRecorder(stream)}catch(e2){toast("Recording could not start in this browser.");hideRenderModal();return}}
+  try{recorder=new MediaRecorder(stream,recMime?{mimeType:recMime,videoBitsPerSecond:10000000}:{videoBitsPerSecond:10000000})}catch(e){try{recorder=new MediaRecorder(stream)}catch(e2){toast("Recording could not start in this browser.");hideRenderModal();return}}
   chunks=[];recorder.ondataavailable=function(e){if(e.data&&e.data.size)chunks.push(e.data)};
   recording=true;t=0;prevSegIdx=-1;renderStartTime=performance.now();draw(0);updateUI();
   updateRenderProgress(5,"Initializing renderer...");
