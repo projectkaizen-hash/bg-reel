@@ -4,179 +4,202 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Bangla Gazeta · Reel Studio</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;800&display=swap">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: 'media',
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Inter', 'Noto Sans Bengali', 'system-ui', 'sans-serif'],
+      },
+    },
+  },
+}
+</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
 <style>
-:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
---bg:#e9ecea;--bar:#ffffff;--panel:#ffffff;--ink:#14191b;--muted:#5b666a;--line:#d6dcd8;--field:#f2f5f3;--accent:#0a9b62;--accent-ink:#fff;--shadow:0 1px 2px rgba(0,0,0,.06),0 10px 30px rgba(0,0,0,.08)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0f0d;--bar:#111715;--panel:#151b18;--ink:#e8ede9;--muted:#8f9c96;--line:#25302b;--field:#1c2420;--accent:#2fc88a;--accent-ink:#06130d;--shadow:0 1px 0 #25302b,0 14px 34px rgba(0,0,0,.45)}}
-:root[data-theme="dark"]{--bg:#0b0f0d;--bar:#111715;--panel:#151b18;--ink:#e8ede9;--muted:#8f9c96;--line:#25302b;--field:#1c2420;--accent:#2fc88a;--accent-ink:#06130d;--shadow:0 1px 0 #25302b,0 14px 34px rgba(0,0,0,.45)}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*::before,*::after{box-sizing:inherit}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "Noto Sans Bengali",system-ui,-apple-system,"Segoe UI",Roboto,"Nirmala UI",sans-serif}
-button,input,select,textarea{font:inherit;color:inherit}
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;display:flex;align-items:center;gap:14px;padding:10px 20px;background:var(--bar);border-bottom:1px solid var(--line)}
-.top .logo{width:34px;height:34px;flex:none}
-.top h1{margin:0;font-size:16px;line-height:1.2}
-.top h1 small{display:block;font-weight:400;color:var(--muted);font-size:12px}
-.top .sp{flex:1}
-.chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--field);border-radius:999px;padding:5px 11px;font-size:12.5px;color:var(--muted)}
-.chip i{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 var(--accent);animation:pulse 2s infinite}
-@keyframes pulse{70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
-.app{display:grid;grid-template-columns:minmax(320px,400px) minmax(0,1fr);gap:24px;max-width:1200px;margin:0 auto;padding:22px 16px 56px;align-items:start}
-.left{position:sticky;top:calc(66px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;gap:12px;min-width:0}
-.stage{background:#000;border-radius:24px;overflow:hidden;width:100%;max-width:360px;margin:0 auto;aspect-ratio:9/16;box-shadow:var(--shadow)}
-.stage canvas{display:block;width:100%;height:100%}
-.w360{max-width:360px;width:100%;margin:0 auto}
-.transport{display:flex;align-items:center;gap:10px}
-.transport input{flex:1;min-width:0;accent-color:var(--accent)}
-.time{font-variant-numeric:tabular-nums;color:var(--muted);font-size:13px;white-space:nowrap}
-#tl{display:flex;gap:3px;height:34px}
-#tl button{flex:1 1 0;min-width:0;border:0;border-radius:6px;background:var(--field);color:var(--muted);font-size:11px;cursor:pointer;overflow:hidden;white-space:nowrap;border:1px solid var(--line);padding:0 2px}
-#tl button.cur{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
-#tl button.off{opacity:.35}
-.btn{appearance:none;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:8px 13px;cursor:pointer;font-weight:600;font-size:14px;line-height:1.2}
-.btn:hover{border-color:var(--muted)}
-.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.btn.small{padding:6px 10px;font-size:13px}.btn.ghost{background:transparent}.btn[disabled]{opacity:.5;cursor:not-allowed}
-.recrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.status{color:var(--muted);font-size:13px}
-#result{display:flex;flex-direction:column;gap:10px}
-#result video{width:100%;border-radius:14px;background:#000;max-height:420px}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
-.panel h2{margin:0 0 12px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.field{display:flex;flex-direction:column;gap:4px;margin-bottom:10px;min-width:0}
-.field>span{font-size:12.5px;color:var(--muted)}
-.field input[type=text],.field select,.card input[type=text],.card textarea,.bar select{width:100%;border:1px solid var(--line);background:var(--field);border-radius:9px;padding:8px 10px;min-width:0}
-.field input[type=color]{width:100%;height:38px;padding:2px;border:1px solid var(--line);background:var(--field);border-radius:9px}
-.field input[type=range]{accent-color:var(--accent);width:100%}
-.check{display:flex;align-items:center;gap:8px;font-size:14px}
-.check input{accent-color:var(--accent);width:18px;height:18px}
-main>.panel+.panel{margin-top:14px}
-.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
-.bar select{width:auto;max-width:200px}
-.bar input[type=date]{border:1px solid var(--line);background:var(--field);border-radius:9px;padding:7px 10px}
-.bar .inl{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
-.bar .status{flex-basis:100%;min-height:1.2em}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 12px}
-#list{display:flex;flex-direction:column;gap:12px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px}
-.card.off{opacity:.55}
-.card-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-.card-h .btns{display:flex;gap:6px}
-.card-body{display:grid;grid-template-columns:112px minmax(0,1fr);gap:12px}
-.thumb{width:112px;aspect-ratio:9/16;border-radius:10px;overflow:hidden;background:var(--field);border:1px dashed var(--line);display:grid;place-items:center;color:var(--muted);font-size:12px;text-align:center;padding:6px}
-.thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.fields{display:flex;flex-direction:column;gap:8px;min-width:0}.fields textarea{resize:vertical}
-.row-btns{display:flex;gap:8px;flex-wrap:wrap}
-.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;max-width:min(92vw,460px);z-index:20}
+body{margin:0;font-family:"Inter","Noto Sans Bengali",system-ui,-apple-system,sans-serif}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.note{color:var(--muted);font-size:13px;margin:0}
-.logoprev{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.logoprev img{height:40px;max-width:160px;object-fit:contain;background:var(--field);border:1px solid var(--line);border-radius:8px;padding:4px}
-@media (min-width:861px){.left{max-height:calc(100vh - 80px);overflow-y:auto;padding:2px 4px 2px 0}}
-@media (max-width:860px){.app{grid-template-columns:minmax(0,1fr)}.left{position:static}.top .chip{display:none}}
-@media (max-width:420px){.card-body{grid-template-columns:88px minmax(0,1fr)}.thumb{width:88px}}
-@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.chip i{animation:none}}
+.stage{background:#000;border-radius:12px;overflow:hidden;width:100%;max-width:380px;margin:0 auto;aspect-ratio:9/16;box-shadow:0 10px 40px rgba(0,0,0,.15)}
+.stage canvas{display:block;width:100%;height:100%}
+#tl{display:flex;gap:2px;height:32px}
+#tl button{flex:1 1 0;min-width:0;border:0;border-radius:4px;background:#f1f5f9;color:#64748b;font-size:11px;cursor:pointer;overflow:hidden;white-space:nowrap;border:1px solid #e2e8f0;padding:0 2px;transition:all .15s}
+#tl button.cur{background:#0f172a;color:#fff;border-color:#0f172a;font-weight:500}
+#tl button.off{opacity:.4}
+@media (min-width:1024px){.left-panel{max-height:calc(100vh - 100px);overflow-y:auto}}
+@media (max-width:1023px){.app{grid-template-columns:1fr}.left-panel{position:static}}
+@media (max-width:640px){.card-body{grid-template-columns:80px minmax(0,1fr)}.thumb{width:80px}}
 </style>
 </head>
-<body>
-<header class="top">
-  <svg class="logo" id="topLogo" viewBox="0 0 96 96" aria-hidden="true"></svg>
-  <h1>Reel Studio<small>Bangla Gazeta · 1080×1920 news reels</small></h1>
-  <span class="sp"></span>
-  <span class="chip"><i></i>banglagazeta.com connected</span>
-  <button class="btn primary" id="rec" type="button">Record video</button>
+<body class="bg-slate-50 dark:bg-slate-950 min-h-screen">
+<header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg border-b border-slate-200 dark:border-slate-800">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <div class="flex items-center gap-3">
+        <svg class="logo w-8 h-8" id="topLogo" viewBox="0 0 96 96" aria-hidden="true"></svg>
+        <div>
+          <h1 class="text-lg font-semibold text-slate-900 dark:text-slate-50">Reel Studio</h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Bangla Gazeta · 1080×1920 news reels</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          banglagazeta.com connected
+        </span>
+        <button class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-slate-900 dark:bg-slate-50 dark:text-slate-900 rounded-lg hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors" id="rec" type="button">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+          Render video
+        </button>
+      </div>
+    </div>
+  </div>
 </header>
 
-<div class="app">
-  <aside class="left" aria-label="Preview">
+<div class="app max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-[380px_minmax(0,1fr)] gap-8 items-start">
+  <aside class="left-panel flex flex-col gap-4" aria-label="Preview">
     <div class="stage"><canvas id="cv" width="1080" height="1920" aria-label="Reel preview"></canvas></div>
-    <div class="transport w360">
-      <button class="btn small" id="play" type="button">Play</button>
-      <input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Timeline">
-      <span class="time" id="time">0:00 / 0:00</span>
+    <div class="flex items-center gap-3 bg-white dark:bg-slate-900 rounded-lg p-3 border border-slate-200 dark:border-slate-800">
+      <button class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" id="play" type="button">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Timeline" class="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-slate-900 dark:accent-slate-50">
+      <span class="time text-sm text-slate-500 dark:text-slate-400 font-mono" id="time">0:00 / 0:00</span>
     </div>
-    <div class="w360" id="tl" aria-label="Scenes"></div>
-    <div class="recrow w360"><span class="status" id="recStatus"></span></div>
-    <div id="result" class="w360" hidden>
-      <video id="resVideo" controls playsinline></video>
-      <button class="btn" id="saveVid" type="button">Save video</button>
-    </div>
+    <div id="tl" aria-label="Scenes"></div>
+    <div class="flex items-center gap-2"><span class="status text-sm text-slate-500 dark:text-slate-400" id="recStatus"></span></div>
   </aside>
 
-  <main>
-    <section class="panel" aria-labelledby="hs">
-      <h2 id="hs">Source</h2>
-      <div class="bar">
-        <button class="btn primary" id="fetchBtn" type="button">Fetch posts</button>
-        <label class="inl"><span>Date</span><input type="date" id="fDate"></label>
-        <button class="btn small ghost" id="fDateClear" type="button">Latest</button>
-        <label class="inl"><span>Category</span><select id="fCat"><option value="">All categories</option></select></label>
-        <span class="status" id="fStatus" role="status"></span>
+  <main class="space-y-6">
+    <section class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm" aria-labelledby="hs">
+      <h2 id="hs" class="text-sm font-semibold text-slate-900 dark:text-slate-50 uppercase tracking-wider mb-4">Source</h2>
+      <div class="flex flex-wrap items-center gap-3">
+        <button class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-slate-900 dark:bg-slate-50 dark:text-slate-900 rounded-lg hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors" id="fetchBtn" type="button">Fetch posts</button>
+        <label class="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400"><span>Date</span><input type="date" id="fDate" class="px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-50"></label>
+        <button class="inline-flex items-center px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 transition-colors" id="fDateClear" type="button">Latest</button>
+        <label class="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400"><span>Category</span><select id="fCat" class="px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-50"><option value="">All categories</option></select></label>
+        <span class="status text-sm text-slate-500 dark:text-slate-400" id="fStatus" role="status"></span>
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="sh">
-      <h2 id="sh">Brand and style</h2>
-      <div class="logoprev"><img id="logoImg" alt="Logo preview">
-        <label class="btn small" style="cursor:pointer">Upload logo (SVG/PNG)<input id="logoUp" type="file" accept="image/svg+xml,image/png,image/webp,image/jpeg" class="vh"></label>
-        <button class="btn small ghost" id="logoReset" type="button">Use default</button></div>
-      <div class="grid2">
-        <label class="field"><span>Brand name (beside default logo)</span><input type="text" data-s="brand"></label>
-        <label class="field"><span>Opening title</span><input type="text" data-s="title"></label>
+    <section class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm" aria-labelledby="sh">
+      <h2 id="sh" class="text-sm font-semibold text-slate-900 dark:text-slate-50 uppercase tracking-wider mb-4">Brand and style</h2>
+      <div class="flex items-center gap-3 mb-6"><img id="logoImg" alt="Logo preview" class="h-10 max-w-[160px] object-contain bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-1">
+        <label class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer transition-colors">Upload logo (SVG/PNG)<input id="logoUp" type="file" accept="image/svg+xml,image/png,image/webp,image/jpeg" class="vh"></label>
+        <button class="inline-flex items-center px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 transition-colors" id="logoReset" type="button">Use default</button></div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <label class="flex flex-col gap-1.5"><span class="text-sm font-medium text-slate-700 dark:text-slate-300">Brand name (beside default logo)</span><input type="text" data-s="brand" class="px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-50"></label>
+        <label class="flex flex-col gap-1.5"><span class="text-sm font-medium text-slate-700 dark:text-slate-300">Opening title</span><input type="text" data-s="title" class="px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-50"></label>
       </div>
-      <div class="grid2">
-        <label class="field"><span>Date line (empty = today)</span><input type="text" data-s="date" placeholder="Auto"></label>
-        <label class="field"><span>Closing headline</span><input type="text" data-s="outroTitle"></label>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+        <label class="flex flex-col gap-1.5"><span class="text-sm font-medium text-slate-700 dark:text-slate-300">Date line (empty = today)</span><input type="text" data-s="date" placeholder="Auto" class="px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-50"></label>
+        <label class="flex flex-col gap-1.5"><span class="text-sm font-medium text-slate-700 dark:text-slate-300">Closing headline</span><input type="text" data-s="outroTitle" class="px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-50"></label>
       </div>
-      <div class="grid2">
-        <label class="field"><span>Closing link</span><input type="text" data-s="outroSub"></label>
-        <label class="field"><span>Accent colour</span><input type="color" data-s="accent"></label>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+        <label class="flex flex-col gap-1.5"><span class="text-sm font-medium text-slate-700 dark:text-slate-300">Closing link</span><input type="text" data-s="outroSub" class="px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-50"></label>
+        <label class="flex flex-col gap-1.5"><span class="text-sm font-medium text-slate-700 dark:text-slate-300">Accent colour</span><input type="color" data-s="accent" class="w-full h-10 px-1 py-1 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 cursor-pointer"></label>
       </div>
-      <div class="grid2">
-        <label class="field"><span>Card layout</span><select data-s="layout"><option value="overlay">Full photo, text on top</option><option value="split">Photo above, text panel below</option></select></label>
-        <label class="field"><span>Text panel (split)</span><select data-s="panel"><option value="dark">Dark</option><option value="light">Light</option></select></label>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+        <label class="flex flex-col gap-1.5"><span class="text-sm font-medium text-slate-700 dark:text-slate-300">Card layout</span><select data-s="layout" class="px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-50"><option value="overlay">Full photo, text on top</option><option value="split">Photo above, text panel below</option></select></label>
+        <label class="flex flex-col gap-1.5"><span class="text-sm font-medium text-slate-700 dark:text-slate-300">Text panel (split)</span><select data-s="panel" class="px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-50"><option value="dark">Dark</option><option value="light">Light</option></select></label>
       </div>
-      <label class="field"><span>Seconds per card: <b id="durLabel">5</b></span><input type="range" min="3" max="10" step="0.5" data-s="dur"></label>
-      <div class="grid2">
-        <label class="check"><input type="checkbox" data-s="progress"> Progress bar</label>
-        <label class="check"><input type="checkbox" data-s="motion"> Motion effects</label>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="sa">
-      <h2 id="sa">Audio</h2>
-      <div class="grid2">
-        <label class="field"><span>Background music</span><label class="btn small" style="cursor:pointer">Upload audio<input id="bgMusicUp" type="file" accept="audio/*" class="vh"></label></label>
-        <label class="field"><span>Transition sound</span><label class="btn small" style="cursor:pointer">Upload audio<input id="transSoundUp" type="file" accept="audio/*" class="vh"></label></label>
-      </div>
-      <div class="grid2">
-        <label class="field"><span>Music volume: <b id="musicVolLabel">50</b>%</span><input type="range" min="0" max="100" data-s="musicVol"></label>
-        <label class="field"><span>Sound volume: <b id="soundVolLabel">70</b>%</span><input type="range" min="0" max="100" data-s="soundVol"></label>
-      </div>
-      <div class="grid2">
-        <label class="check"><input type="checkbox" data-s="enableMusic"> Enable background music</label>
-        <label class="check"><input type="checkbox" data-s="enableSound"> Enable transition sounds</label>
-      </div>
-      <div class="bar">
-        <button class="btn small ghost" id="audioReset" type="button">Clear audio files</button>
-        <span class="status" id="audioStatus"></span>
+      <label class="flex flex-col gap-1.5 mt-4"><span class="text-sm font-medium text-slate-700 dark:text-slate-300">Seconds per card: <b id="durLabel" class="text-slate-900 dark:text-slate-50">5</b></span><input type="range" min="3" max="10" step="0.5" data-s="dur" class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-slate-900 dark:accent-slate-50"></label>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+        <label class="inline-flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300"><input type="checkbox" data-s="progress" class="w-4 h-4 rounded border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-50 focus:ring-slate-900 dark:focus:ring-slate-50"> Progress bar</label>
+        <label class="inline-flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300"><input type="checkbox" data-s="motion" class="w-4 h-4 rounded border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-50 focus:ring-slate-900 dark:focus:ring-slate-50"> Motion effects</label>
       </div>
     </section>
 
-    <div class="toolbar">
-      <button class="btn" id="addCard" type="button">Add card</button>
-      <label class="btn" style="cursor:pointer">Add photos in order<input id="bulk" type="file" accept="image/*" multiple class="vh"></label>
-      <button class="btn" id="exportT" type="button">Export template</button>
-      <label class="btn" style="cursor:pointer">Import template<input id="importT" type="file" accept="application/json,.json" class="vh"></label>
-      <button class="btn ghost" id="resetT" type="button">Reset to samples</button>
+    <section class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm" aria-labelledby="sa">
+      <h2 id="sa" class="text-sm font-semibold text-slate-900 dark:text-slate-50 uppercase tracking-wider mb-4">Audio</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <label class="flex flex-col gap-1.5"><span class="text-sm font-medium text-slate-700 dark:text-slate-300">Background music</span><label class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer transition-colors">Upload audio<input id="bgMusicUp" type="file" accept="audio/*" class="vh"></label></label>
+        <label class="flex flex-col gap-1.5"><span class="text-sm font-medium text-slate-700 dark:text-slate-300">Transition sound</span><label class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer transition-colors">Upload audio<input id="transSoundUp" type="file" accept="audio/*" class="vh"></label></label>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+        <label class="flex flex-col gap-1.5"><span class="text-sm font-medium text-slate-700 dark:text-slate-300">Music volume: <b id="musicVolLabel" class="text-slate-900 dark:text-slate-50">50</b>%</span><input type="range" min="0" max="100" data-s="musicVol" class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-slate-900 dark:accent-slate-50"></label>
+        <label class="flex flex-col gap-1.5"><span class="text-sm font-medium text-slate-700 dark:text-slate-300">Sound volume: <b id="soundVolLabel" class="text-slate-900 dark:text-slate-50">70</b>%</span><input type="range" min="0" max="100" data-s="soundVol" class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-slate-900 dark:accent-slate-50"></label>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+        <label class="inline-flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300"><input type="checkbox" data-s="enableMusic" class="w-4 h-4 rounded border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-50 focus:ring-slate-900 dark:focus:ring-slate-50"> Enable background music</label>
+        <label class="inline-flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300"><input type="checkbox" data-s="enableSound" class="w-4 h-4 rounded border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-50 focus:ring-slate-900 dark:focus:ring-slate-50"> Enable transition sounds</label>
+      </div>
+      <div class="flex flex-wrap items-center gap-3 mt-4">
+        <button class="inline-flex items-center px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 transition-colors" id="audioReset" type="button">Clear audio files</button>
+        <span class="status text-sm text-slate-500 dark:text-slate-400" id="audioStatus"></span>
+      </div>
+    </section>
+
+    <div class="flex flex-wrap gap-2">
+      <button class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors" id="addCard" type="button">Add card</button>
+      <label class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer transition-colors">Add photos in order<input id="bulk" type="file" accept="image/*" multiple class="vh"></label>
+      <button class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors" id="exportT" type="button">Export template</button>
+      <label class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer transition-colors">Import template<input id="importT" type="file" accept="application/json,.json" class="vh"></label>
+      <button class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 transition-colors" id="resetT" type="button">Reset to samples</button>
     </div>
     <div id="list"></div>
   </main>
 </div>
-<div class="toast" id="toast" hidden></div>
+
+<!-- Rendering Modal -->
+<div id="renderModal" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" id="modalBackdrop"></div>
+  <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+      <!-- Rendering State -->
+      <div id="renderingState" class="p-8 text-center">
+        <div class="mb-6">
+          <div class="relative w-20 h-20 mx-auto">
+            <div class="absolute inset-0 border-4 border-slate-200 dark:border-slate-700 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-slate-900 dark:border-slate-50 rounded-full border-t-transparent animate-spin"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <svg class="w-8 h-8 text-slate-900 dark:text-slate-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <h3 class="text-xl font-semibold text-slate-900 dark:text-slate-50 mb-2">Rendering Video</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mb-4" id="renderStatus">Preparing to render...</p>
+        <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 mb-4">
+          <div id="renderProgress" class="bg-slate-900 dark:bg-slate-50 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+        <p class="text-xs text-slate-400 dark:text-slate-500" id="renderTime">Estimated time: Calculating...</p>
+      </div>
+
+      <!-- Complete State -->
+      <div id="completeState" class="p-8 text-center hidden">
+        <div class="mb-6">
+          <div class="w-20 h-20 mx-auto bg-emerald-100 dark:bg-emerald-950 rounded-full flex items-center justify-center">
+            <svg class="w-10 h-10 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+        </div>
+        <h3 class="text-xl font-semibold text-slate-900 dark:text-slate-50 mb-2">Render Complete!</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mb-6" id="renderResult">Your video is ready to download</p>
+        <video id="previewVideo" controls class="w-full rounded-lg bg-black mb-4 max-h-[200px] hidden"></video>
+        <div class="flex gap-3">
+          <button id="downloadBtn" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-slate-900 dark:bg-slate-50 dark:text-slate-900 rounded-lg hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+            </svg>
+            Download Video
+          </button>
+          <button id="closeModal" class="inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast fixed left-1/2 bottom-6 -translate-x-1/2 bg-slate-900 dark:bg-slate-50 text-white dark:text-slate-900 px-4 py-3 rounded-lg text-sm max-w-[92vw] max-w-[460px] z-50 hidden" id="toast"></div>
 
 <script>
 (function(){
@@ -265,7 +288,7 @@ function brandBar(lt){
   var bw=brandWidth(56,34)+48;rr(72,86,bw,84,42);ctx.fillStyle="rgba(0,0,0,.5)";ctx.fill();drawBrand(96,100,56,34,"#fff");
   ctx.restore();ctx.save();ctx.globalAlpha=a;ctx.font="600 32px "+FONT;ctx.fillStyle="#fff";ctx.textAlign="right";ctx.textBaseline="middle";ctx.shadowColor="rgba(0,0,0,.55)";ctx.shadowBlur=10;ctx.fillText(S.date.trim()||autoDate(),W-72,130);ctx.restore();ctx.textAlign="left"}
 function progressBar(idx,n,p){if(!S.progress||n<1)return;var gap=8,tot=W-144,w=(tot-gap*(n-1))/n;for(var i=0;i<n;i++){var x=72+i*(w+gap);rr(x,50,w,8,4);ctx.fillStyle="rgba(255,255,255,.28)";ctx.fill();var f=i<idx?1:i===idx?p:0;if(f>0){rr(x,50,Math.max(8,w*f),8,4);ctx.fillStyle="#fff";ctx.fill()}}}
-function footer(c,color,y,lt){var a=ease(anim(lt,.5,.6));ctx.save();ctx.globalAlpha=a;ctx.fillStyle=S.accent;ctx.fillRect(72,y+4,56*mo(a),6);ctx.font="600 32px "+FONT;ctx.fillStyle=color;ctx.textBaseline="top";ctx.textAlign="left";ctx.fillText("সূত্র: "+(S.brand||""),150,y-8);ctx.restore()}
+function footer(c,color,y,lt){ctx.restore()}
 
 function drawCard(c,lt,d,idx,n){
   var p=lt/d,zoom=S.motion?1.1+.14*p:1,pan=S.motion?(idx%2?1:-1)*(p*2-1)*.8:0,padX=72,maxW=W-padX*2;
@@ -325,16 +348,16 @@ function draw(t){
 /* ---------- playback ---------- */
 var t=0,playing=false,last=0,raf=0,recording=false;
 function fmt(x){x=Math.max(0,Math.round(x));return Math.floor(x/60)+":"+String(x%60).padStart(2,"0")}
-function renderTL(){var segs=segments();$("tl").innerHTML=segs.map(function(s,i){var lab=s.type==="intro"?"Intro":s.type==="outro"?"End":String(i);return'<button type="button" data-i="'+i+'" style="flex-grow:'+s.d+'" aria-label="Scene '+lab+'">'+lab+'</button>'}).join("")}
+function renderTL(){var segs=segments();$("tl").innerHTML=segs.map(function(s,i){var lab=s.type==="intro"?"Intro":s.type==="outro"?"End":String(i);return'<button type="button" data-i="'+i+'" style="flex-grow:'+s.d+'" aria-label="Scene '+lab+'" class="transition-colors">'+lab+'</button>'}).join("")}
 function updateUI(){var T=total();$("scrub").value=String(Math.round(t/T*1000));$("time").textContent=fmt(t)+" / "+fmt(T);var q=segAt(t),b=$("tl").children;if(b.length!==q.segs.length)renderTL();for(var i=0;i<b.length;i++)b[i].className=i===q.i?"cur":""}
 $("tl").addEventListener("click",function(e){var b=e.target.closest("button");if(!b||recording)return;var i=Number(b.getAttribute("data-i")),segs=segments(),acc=0;for(var k=0;k<i;k++)acc+=segs[k].d;pause();t=acc+Math.min(1.4,segs[i].d-.01);redraw()});
-function tick(now){if(!playing)return;t+=(now-last)/1000;last=now;var T=total();if(t>=T){if(recording){t=T-.001;draw(t);updateUI();finishRec();return}t=0;stopBgMusic();prevSegIdx=-1}var q=segAt(t);if(q.i!==prevSegIdx){if(q.i>0&&q.i<q.segs.length-1&&S.enableSound){if(recording&&transSource&&transSource.mediaElement){transSource.mediaElement.currentTime=0;transSource.mediaElement.play().catch(function(){})}else{playTransSound()}}if(q.i===0&&S.enableMusic){if(recording&&bgSource&&bgSource.mediaElement){bgSource.mediaElement.currentTime=0;bgSource.mediaElement.play().catch(function(){})}else{playBgMusic()}}prevSegIdx=q.i}draw(t);updateUI();raf=requestAnimationFrame(tick)}
-function play(){if(playing)return;initAudio().then(function(){playing=true;last=performance.now();$("play").textContent="Pause";raf=requestAnimationFrame(tick);if(S.enableMusic)playBgMusic()})}
-function pause(){playing=false;cancelAnimationFrame(raf);$("play").textContent="Play";stopBgMusic()}
+function tick(now){if(!playing)return;t+=(now-last)/1000;last=now;var T=total();if(t>=T){if(recording){t=T-.001;draw(t);updateUI();finishRec();return}t=0;stopBgMusic();prevSegIdx=-1}if(recording){var elapsed=(now-renderStartTime)/1000,progress=Math.min(95,5+(elapsed/T)*90);updateRenderProgress(Math.round(progress),"Rendering... "+Math.floor(t)+"s / "+Math.floor(T)+"s")}var q=segAt(t);if(q.i!==prevSegIdx){if(q.i>0&&q.i<q.segs.length-1&&S.enableSound){if(recording&&transSource&&transSource.mediaElement){transSource.mediaElement.currentTime=0;transSource.mediaElement.play().catch(function(){})}else{playTransSound()}}if(q.i===0&&S.enableMusic){if(recording&&bgSource&&bgSource.mediaElement){bgSource.mediaElement.currentTime=0;bgSource.mediaElement.play().catch(function(){})}else{playBgMusic()}}prevSegIdx=q.i}draw(t);updateUI();raf=requestAnimationFrame(tick)}
+function play(){if(playing)return;initAudio().then(function(){playing=true;last=performance.now();$("play").innerHTML='<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>';raf=requestAnimationFrame(tick);if(S.enableMusic)playBgMusic()})}
+function pause(){playing=false;cancelAnimationFrame(raf);$("play").innerHTML='<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';stopBgMusic()}
 function redraw(){draw(Math.min(t,total()-.001));updateUI()}
 
 /* ---------- recording ---------- */
-var recorder=null,chunks=[],lastBlob=null,lastExt="webm",resUrl=null,recMime="",audioCtx=null,bgSource=null,transSource=null,destNode=null;
+var recorder=null,chunks=[],lastBlob=null,lastExt="webm",resUrl=null,recMime="",audioCtx=null,bgSource=null,transSource=null,destNode=null,renderStartTime=0;
 async function ensureFonts(){try{await Promise.all(["800","600","400"].map(function(w){return document.fonts.load(w+' 60px "Noto Sans Bengali"',"বাংলা গেজেটা ০১২৩৪৫৬৭৮৯")}))}catch(e){}}
 async function setupAudioForRecording(){
   if(!S.enableMusic&&!S.enableSound)return cv.captureStream(30);
@@ -369,37 +392,43 @@ async function setupAudioForRecording(){
     return new MediaStream(combinedTracks);
   }catch(e){console.warn("Audio setup failed, recording video only",e);return cv.captureStream(30)}
 }
+function showRenderModal(){$("renderModal").classList.remove("hidden");$("renderingState").classList.remove("hidden");$("completeState").classList.add("hidden");$("renderProgress").style.width="0%";$("renderStatus").textContent="Preparing to render...";$("renderTime").textContent="Estimated time: Calculating..."}
+function hideRenderModal(){$("renderModal").classList.add("hidden")}
+function updateRenderProgress(percent,status){$("renderProgress").style.width=percent+"%";$("renderStatus").textContent=status}
+function showRenderComplete(){var T=total();$("renderingState").classList.add("hidden");$("completeState").classList.remove("hidden");$("renderResult").textContent="Your video is ready to download ("+(lastBlob.size/1048576).toFixed(1)+" MB, ."+lastExt+")";$("previewVideo").src=resUrl;$("previewVideo").classList.remove("hidden")}
 async function startRec(){
   if(recording)return;
   if(typeof MediaRecorder==="undefined"||!cv.captureStream){toast("This browser can't record canvas video. Try Chrome, Edge or Safari 17+.");return}
   pause();await ensureFonts();await initAudio();
+  showRenderModal();
   var cands=["video/mp4;codecs=avc1.640028","video/mp4;codecs=avc1","video/mp4","video/webm;codecs=vp9","video/webm;codecs=vp8","video/webm"];
   recMime=cands.find(function(m){try{return MediaRecorder.isTypeSupported(m)}catch(e){return false}})||"";
   var stream=await setupAudioForRecording();
-  try{recorder=new MediaRecorder(stream,recMime?{mimeType:recMime,videoBitsPerSecond:8000000}:{videoBitsPerSecond:8000000})}catch(e){try{recorder=new MediaRecorder(stream)}catch(e2){toast("Recording could not start in this browser.");return}}
+  try{recorder=new MediaRecorder(stream,recMime?{mimeType:recMime,videoBitsPerSecond:8000000}:{videoBitsPerSecond:8000000})}catch(e){try{recorder=new MediaRecorder(stream)}catch(e2){toast("Recording could not start in this browser.");hideRenderModal();return}}
   chunks=[];recorder.ondataavailable=function(e){if(e.data&&e.data.size)chunks.push(e.data)};
-  recording=true;t=0;prevSegIdx=-1;draw(0);updateUI();
-  $("rec").disabled=true;$("play").disabled=true;$("scrub").disabled=true;$("result").hidden=true;
-  $("recStatus").textContent="Recording in real time. Keep this tab visible.";
+  recording=true;t=0;prevSegIdx=-1;renderStartTime=performance.now();draw(0);updateUI();
+  updateRenderProgress(5,"Initializing renderer...");
+  var T=total();$("renderTime").textContent="Estimated time: ~"+Math.ceil(T)+"s";
   recorder.start(250);playing=true;last=performance.now();raf=requestAnimationFrame(tick)}
 function finishRec(){
   playing=false;cancelAnimationFrame(raf);stopBgMusic();
   if(audioCtx){try{audioCtx.close()}catch(e){}audioCtx=null;bgSource=null;transSource=null;destNode=null}
   var type=(recorder&&recorder.mimeType)||recMime||"video/webm";
-  recorder.onstop=function(){recording=false;lastBlob=new Blob(chunks,{type:type});lastExt=type.indexOf("mp4")>=0?"mp4":"webm";if(resUrl){try{URL.revokeObjectURL(resUrl)}catch(e){}}resUrl=URL.createObjectURL(lastBlob);$("resVideo").src=resUrl;$("result").hidden=false;$("recStatus").textContent="Done. "+(lastBlob.size/1048576).toFixed(1)+" MB, ."+lastExt;$("rec").disabled=false;$("play").disabled=false;$("scrub").disabled=false;$("play").textContent="Play"};
+  updateRenderProgress(95,"Finalizing video...");
+  recorder.onstop=function(){recording=false;lastBlob=new Blob(chunks,{type:type});lastExt=type.indexOf("mp4")>=0?"mp4":"webm";if(resUrl){try{URL.revokeObjectURL(resUrl)}catch(e){}}resUrl=URL.createObjectURL(lastBlob);updateRenderProgress(100,"Complete!");setTimeout(showRenderComplete,300);$("rec").disabled=false;$("play").disabled=false;$("scrub").disabled=false;$("play").innerHTML='<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'};
   try{recorder.requestData()}catch(e){}recorder.stop()}
 async function saveFile(name,data){try{var blob=data instanceof Blob?data:new Blob([data],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){try{URL.revokeObjectURL(url)}catch(e){}},5000);toast("Saved");return true}catch(e){toast("Couldn't save: "+((e&&e.message)||"unknown error"));return false}}
 var toastTimer=0;
-function toast(m){var el=$("toast");el.textContent=m;el.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.hidden=true},4200)}
+function toast(m){var el=$("toast");el.textContent=m;el.classList.remove("hidden");clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.classList.add("hidden")},4200)}
 
 /* ---------- editor list ---------- */
 function renderList(){
   var list=$("list");
-  list.innerHTML=cards.map(function(c,i){return'<div class="card'+(c.on?"":" off")+'" data-i="'+i+'"><div class="card-h"><label class="check"><input type="checkbox" data-k="on"'+(c.on?" checked":"")+'> Card '+(i+1)+'</label><div class="btns"><button class="btn small" type="button" data-act="seek">Preview</button><button class="btn small" type="button" data-act="up" aria-label="Move up"'+(i===0?" disabled":"")+'>↑</button><button class="btn small" type="button" data-act="down" aria-label="Move down"'+(i===cards.length-1?" disabled":"")+'>↓</button><button class="btn small" type="button" data-act="del">Delete</button></div></div><div class="card-body"><div class="thumb">'+(c.img?'<img alt="" src="'+c.img+'">':"No photo yet")+'</div><div class="fields"><input type="text" data-k="cat" placeholder="Category" value="'+esc(c.cat)+'" aria-label="Category"><textarea data-k="head" rows="2" placeholder="Headline" aria-label="Headline">'+esc(c.head)+'</textarea><textarea data-k="blurb" rows="2" placeholder="Short line (optional)" aria-label="Short line">'+esc(c.blurb)+'</textarea><div class="row-btns"><label class="btn small" style="cursor:pointer">'+(c.img?"Replace photo":"Add photo")+'<input type="file" accept="image/*" data-act="photo" class="vh"></label>'+(c.img?'<button class="btn small ghost" type="button" data-act="clearimg">Remove photo</button>':"")+'</div></div></div></div>'}).join("");
-  if(!cards.length)list.innerHTML='<p class="note">No cards yet. Add one to start.</p>'}
+  list.innerHTML=cards.map(function(c,i){return'<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-4 shadow-sm'+(c.on?"":" opacity-55")+'" data-i="'+i+'"><div class="flex items-center justify-between gap-3 mb-4 flex-wrap"><label class="inline-flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-300"><input type="checkbox" data-k="on"'+(c.on?" checked":"")+' class="w-4 h-4 rounded border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-50 focus:ring-slate-900 dark:focus:ring-slate-50"> Card '+(i+1)+'</label><div class="flex gap-2"><button class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" type="button" data-act="seek">Preview</button><button class="inline-flex items-center justify-center w-8 h-8 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" type="button" data-act="up" aria-label="Move up"'+(i===0?" disabled":"")+'>↑</button><button class="inline-flex items-center justify-center w-8 h-8 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" type="button" data-act="down" aria-label="Move down"'+(i===cards.length-1?" disabled":"")+'>↓</button><button class="inline-flex items-center justify-center w-8 h-8 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 rounded-lg hover:bg-red-50 dark:hover:bg-red-950 transition-colors" type="button" data-act="del">×</button></div></div><div class="grid grid-cols-[112px_minmax(0,1fr)] gap-4"><div class="thumb w-[112px] aspect-[9/16] rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-800 border border-dashed border-slate-200 dark:border-slate-700 grid place-items-center text-slate-400 dark:text-slate-500 text-xs text-center p-2">'+(c.img?'<img alt="" src="'+c.img+'" class="w-full h-full object-cover">':"No photo yet")+'</div><div class="flex flex-col gap-3"><input type="text" data-k="cat" placeholder="Category" value="'+esc(c.cat)+'" aria-label="Category" class="px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-50"><textarea data-k="head" rows="2" placeholder="Headline" aria-label="Headline" class="px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-50 resize-vertical">'+esc(c.head)+'</textarea><textarea data-k="blurb" rows="2" placeholder="Short line (optional)" aria-label="Short line" class="px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-50 resize-vertical">'+esc(c.blurb)+'</textarea><div class="flex gap-2 flex-wrap"><label class="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer transition-colors">'+(c.img?"Replace photo":"Add photo")+'<input type="file" accept="image/*" data-act="photo" class="vh"></label>'+(c.img?'<button class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 transition-colors" type="button" data-act="clearimg">Remove photo</button>':"")+'</div></div></div></div>'}).join("");
+  if(!cards.length)list.innerHTML='<p class="text-sm text-slate-500 dark:text-slate-400 text-center py-8">No cards yet. Add one to start.</p>'}
 function ci(el){var n=el.closest(".card");return n?Number(n.getAttribute("data-i")):-1}
 function changed(){renderList();persist();renderTL();redraw()}
-$("list").addEventListener("input",function(e){var k=e.target.getAttribute("data-k");if(!k)return;var i=ci(e.target);if(i<0)return;if(k==="on"){cards[i].on=e.target.checked;e.target.closest(".card").classList.toggle("off",!cards[i].on);renderTL()}else cards[i][k]=e.target.value;persist();redraw()});
+$("list").addEventListener("input",function(e){var k=e.target.getAttribute("data-k");if(!k)return;var i=ci(e.target);if(i<0)return;if(k==="on"){cards[i].on=e.target.checked;e.target.closest("div[data-i]").classList.toggle("opacity-55",!cards[i].on);renderTL()}else cards[i][k]=e.target.value;persist();redraw()});
 $("list").addEventListener("click",function(e){
   var b=e.target.closest("[data-act]");if(!b||b.tagName==="INPUT")return;var i=ci(b);if(i<0)return;var act=b.getAttribute("data-act");
   if(act==="up"&&i>0){cards.splice(i-1,0,cards.splice(i,1)[0]);changed()}
@@ -425,7 +454,10 @@ $("audioReset").addEventListener("click",function(){S.bgMusic="";S.transSound=""
 $("play").addEventListener("click",function(){if(playing)pause();else play()});
 $("scrub").addEventListener("input",function(e){pause();t=Number(e.target.value)/1000*total();redraw()});
 $("rec").addEventListener("click",startRec);
-$("saveVid").addEventListener("click",function(){if(lastBlob)saveFile("news-reel-"+new Date().toISOString().slice(0,10)+"."+lastExt,lastBlob)});
+$("downloadBtn").addEventListener("click",function(){if(lastBlob)saveFile("news-reel-"+new Date().toISOString().slice(0,10)+"."+lastExt,lastBlob)});
+$("closeModal").addEventListener("click",hideRenderModal);
+$("modalBackdrop").addEventListener("click",hideRenderModal);
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!$("renderModal").classList.contains("hidden"))hideRenderModal()});
 
 /* ---------- fetch from site (embedded) ---------- */
 var FKEY="news-reel-fetch-v3",fopt={cat:"",date:""};
