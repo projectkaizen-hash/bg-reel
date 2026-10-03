@@ -56,6 +56,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 main>.panel+.panel{margin-top:14px}
 .bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
 .bar select{width:auto;max-width:200px}
+.bar input[type=date]{border:1px solid var(--line);background:var(--field);border-radius:9px;padding:7px 10px}
 .bar .inl{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
 .bar .status{flex-basis:100%;min-height:1.2em}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 12px}
@@ -109,10 +110,10 @@ main>.panel+.panel{margin-top:14px}
     <section class="panel" aria-labelledby="hs">
       <h2 id="hs">Source</h2>
       <div class="bar">
-        <button class="btn primary" id="fetchBtn" type="button">Fetch latest posts</button>
-        <label class="inl"><span>Posts</span><select id="fCount"><option>5</option><option>6</option><option>8</option><option>10</option><option>12</option><option>15</option></select></label>
+        <button class="btn primary" id="fetchBtn" type="button">Fetch posts</button>
+        <label class="inl"><span>Date</span><input type="date" id="fDate"></label>
+        <button class="btn small ghost" id="fDateClear" type="button">Latest</button>
         <label class="inl"><span>Category</span><select id="fCat"><option value="">All categories</option></select></label>
-        <label class="check"><input type="checkbox" id="fToday"> Today only</label>
         <span class="status" id="fStatus" role="status"></span>
       </div>
     </section>
@@ -360,7 +361,7 @@ $("rec").addEventListener("click",startRec);
 $("saveVid").addEventListener("click",function(){if(lastBlob)saveFile("news-reel-"+new Date().toISOString().slice(0,10)+"."+lastExt,lastBlob)});
 
 /* ---------- fetch from site (embedded) ---------- */
-var FKEY="news-reel-fetch-v2",fopt={count:8,cat:"",today:false};
+var FKEY="news-reel-fetch-v3",fopt={cat:"",date:""};
 try{Object.assign(fopt,JSON.parse(localStorage.getItem(FKEY)||"{}"))}catch(e){}
 function saveF(){try{localStorage.setItem(FKEY,JSON.stringify(fopt))}catch(e){}}
 function apiUrl(path,params,plain){var q=new URLSearchParams(params||{});q.set("key",API_KEY);if(plain){q.set("rest_route","/news-reel/v1"+path);return "/?"+q}return API+path+"?"+q}
@@ -376,9 +377,13 @@ var fetching=false;
 async function fetchPosts(){
   if(fetching||recording)return;fetching=true;var btn=$("fetchBtn"),st=$("fStatus");btn.disabled=true;pause();st.textContent="Fetching posts…";
   try{
-    var params={count:fopt.count};if(fopt.cat)params.category=fopt.cat;if(fopt.today)params.today=1;
+    var params={count:50};
+    if(fopt.cat)params.category=fopt.cat;
+    if(fopt.date){params.date=fopt.date;params.after=fopt.date+"T00:00:00";params.before=fopt.date+"T23:59:59"}
     var posts=(await api("/posts",params)).posts||[];
-    if(!posts.length){st.textContent=fopt.today?"No posts published today. Untick “Today only” for the latest ones.":"No published posts found for that selection.";return}
+    if(fopt.date){posts=posts.filter(function(p){var d=p.date||p.published||p.post_date;return !d||String(d).slice(0,10)===fopt.date})}
+    else posts=posts.slice(0,8);
+    if(!posts.length){st.textContent=fopt.date?"No posts found for "+fopt.date+".":"No published posts found for that selection.";return}
     var next=posts.map(function(p){return{on:true,cat:p.category||"",head:p.title||"",blurb:p.excerpt||"",img:null,_el:null,_p:p}});
     cards=next;t=0;renderList();persist();renderTL();redraw();
     var withImg=next.filter(function(c){return c._p.image}).length,done=0;if(withImg)st.textContent="Loading photos 0/"+withImg+"…";
@@ -386,8 +391,14 @@ async function fetchPosts(){
     var ok=next.filter(function(c){return c.img}).length;renderList();redraw();
     st.textContent=next.length+" posts loaded, "+ok+" with photos."+(ok<next.length?" Add photos to the rest below.":" Press Play or Record video.");
   }catch(e){st.textContent="Fetch failed: "+((e&&e.message)||"unknown error")}finally{fetching=false;btn.disabled=false}}
-function initFetch(){$("fCount").value=String(fopt.count);if($("fCount").value!==String(fopt.count))$("fCount").value="8";$("fToday").checked=!!fopt.today;
-  $("fCount").addEventListener("change",function(){fopt.count=Number($("fCount").value);saveF()});$("fCat").addEventListener("change",function(){fopt.cat=$("fCat").value;saveF()});$("fToday").addEventListener("change",function(){fopt.today=$("fToday").checked;saveF()});$("fetchBtn").addEventListener("click",fetchPosts);loadCats()}
+function initFetch(){
+  $("fDate").value=fopt.date||"";
+  $("fDate").addEventListener("change",function(){fopt.date=$("fDate").value;saveF()});
+  $("fDateClear").addEventListener("click",function(){$("fDate").value="";fopt.date="";saveF()});
+  $("fCat").addEventListener("change",function(){fopt.cat=$("fCat").value;saveF()});
+  $("fetchBtn").addEventListener("click",fetchPosts);
+  loadCats();
+}
 
 /* ---------- init ---------- */
 restore();initFetch();syncSettings();renderList();renderTL();draw(0);updateUI();
