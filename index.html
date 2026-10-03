@@ -177,7 +177,7 @@ body{margin:0;font-family:"Inter","Noto Sans Bengali",system-ui,-apple-system,sa
         <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 mb-4">
           <div id="renderProgress" class="bg-slate-900 dark:bg-slate-50 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
         </div>
-        <p class="text-xs text-slate-400 dark:text-slate-500" id="renderTime">Estimated time: Calculating... (30fps, 10Mbps)</p>
+        <p class="text-xs text-slate-400 dark:text-slate-500" id="renderTime">Estimated time: Calculating...</p>
       </div>
 
       <!-- Complete State -->
@@ -249,7 +249,7 @@ function restore(){try{var o=JSON.parse(localStorage.getItem(KEY)||"null");if(o&
 
 /* ---------- images & logo ---------- */
 function loadEl(u){return new Promise(function(res){if(!u){res(null);return}var im=new Image();im.onload=function(){res(im)};im.onerror=function(){res(null)};im.src=u})}
-function fileToDataUrl(file){return new Promise(function(res,rej){var fr=new FileReader();fr.onerror=rej;fr.onload=function(){var im=new Image();im.onerror=rej;im.onload=function(){var sc=Math.min(1,1920/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);var ctx=c.getContext("2d");ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality="high";ctx.drawImage(im,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",.85))};im.src=fr.result};fr.readAsDataURL(file)})}
+function fileToDataUrl(file){return new Promise(function(res,rej){var fr=new FileReader();fr.onerror=rej;fr.onload=function(){var im=new Image();im.onerror=rej;im.onload=function(){var sc=Math.min(1,1920/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);c.getContext("2d").drawImage(im,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",.85))};im.src=fr.result};fr.readAsDataURL(file)})}
 async function setPhoto(card,file){try{card.img=await fileToDataUrl(file);card._el=await loadEl(card.img)}catch(e){toast("That image could not be read. Try a JPG or PNG.")}}
 var logoCache={};
 function logoSrc(){return S.logo||"data:image/svg+xml;charset=utf-8,"+encodeURIComponent(logoSvg(S.accent))}
@@ -267,11 +267,9 @@ function updateAudioStatus(){var st=$("audioStatus");if(!S.bgMusic&&!S.transSoun
 
 /* ---------- canvas ---------- */
 var cv=$("cv"),ctx=cv.getContext("2d",{alpha:false});
-ctx.imageSmoothingEnabled=true;
-ctx.imageSmoothingQuality="high";
 function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
 function rrBottom(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+w,y);ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);ctx.closePath()}
-function drawCover(img,x,y,w,h,z,pan){var ir=img.width/img.height,r=w/h,sw,sh;if(ir>r){sh=img.height;sw=sh*r}else{sw=img.width;sh=sw/r}sw/=z;sh/=z;var sx=(img.width-sw)/2*(1+(pan||0)),sy=(img.height-sh)/2;ctx.save();ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality="high";ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();ctx.drawImage(img,sx,sy,sw,sh,x,y,w,h);ctx.restore()}
+function drawCover(img,x,y,w,h,z,pan){var ir=img.width/img.height,r=w/h,sw,sh;if(ir>r){sh=img.height;sw=sh*r}else{sw=img.width;sh=sw/r}sw/=z;sh/=z;var sx=(img.width-sw)/2*(1+(pan||0)),sy=(img.height-sh)/2;ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();ctx.drawImage(img,sx,sy,sw,sh,x,y,w,h);ctx.restore()}
 function particles(lt,alpha){if(!S.motion)return;ctx.save();ctx.fillStyle="#fff";for(var i=0;i<16;i++){var x=(i*197+40)%W,y=H-((lt*(40+i%4*18)+i*173)%H),r=4+(i%5)*3;ctx.globalAlpha=alpha*(.5+.5*Math.sin(lt*2+i));ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill()}ctx.restore()}
 function drawPlaceholder(x,y,w,h,A,lt,cat){var g=ctx.createLinearGradient(x,y,x+w,y+h);g.addColorStop(0,mix(A,"#000",.45));g.addColorStop(1,"#0a0d0c");ctx.fillStyle=g;ctx.fillRect(x,y,w,h);ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();ctx.globalAlpha=.16;ctx.fillStyle=A;ctx.beginPath();ctx.arc(x+w*.85,y+h*.22,380+18*Math.sin(lt*1.5),0,Math.PI*2);ctx.fill();ctx.globalAlpha=.09;ctx.beginPath();ctx.arc(x+w*.08,y+h*.7,300,0,Math.PI*2);ctx.fill();if(cat){ctx.globalAlpha=.07;ctx.fillStyle="#fff";ctx.textAlign="center";ctx.textBaseline="middle";ctx.font="800 300px "+FONT;ctx.fillText(cat,x+w/2,y+h*.4)}ctx.restore();ctx.textAlign="left"}
 function wrap(text,maxW,font){ctx.font=font;var words=String(text).split(/\s+/).filter(Boolean),lines=[],cur="";for(var i=0;i<words.length;i++){var t=cur?cur+" "+words[i]:words[i];if(ctx.measureText(t).width>maxW&&cur){lines.push(cur);cur=words[i]}else cur=t}if(cur)lines.push(cur);return lines}
@@ -362,13 +360,13 @@ function fmt(x){x=Math.max(0,Math.round(x));return Math.floor(x/60)+":"+String(x
 function renderTL(){var segs=segments();$("tl").innerHTML=segs.map(function(s,i){var lab=s.type==="intro"?"Intro":s.type==="outro"?"End":String(i);return'<button type="button" data-i="'+i+'" style="flex-grow:'+s.d+'" aria-label="Scene '+lab+'" class="transition-colors">'+lab+'</button>'}).join("")}
 function updateUI(){var T=total();$("scrub").value=String(Math.round(t/T*1000));$("time").textContent=fmt(t)+" / "+fmt(T);var q=segAt(t),b=$("tl").children;if(b.length!==q.segs.length)renderTL();for(var i=0;i<b.length;i++)b[i].className=i===q.i?"cur":""}
 $("tl").addEventListener("click",function(e){var b=e.target.closest("button");if(!b||recording)return;var i=Number(b.getAttribute("data-i")),segs=segments(),acc=0;for(var k=0;k<i;k++)acc+=segs[k].d;pause();t=acc+Math.min(1.4,segs[i].d-.01);redraw()});
-function tick(now){if(!playing)return;t+=(now-last)/1000;last=now;var T=total();if(t>=T){if(recording){t=T-.001;draw(t);updateUI();finishRec();return}t=0;stopBgMusic();prevSegIdx=-1}if(recording){var elapsed=(now-renderStartTime)/1000,progress=Math.min(95,5+(elapsed/T)*90);updateRenderProgress(Math.round(progress),"Rendering... "+Math.floor(t)+"s / "+Math.floor(T)+"s")}var q=segAt(t);if(q.i!==prevSegIdx){if(q.i>0&&q.i<q.segs.length-1&&S.enableSound){if(recording&&transSource&&transSource.mediaElement){transSource.mediaElement.currentTime=0;transSource.mediaElement.play().catch(function(){})}else{playTransSound()}}if(q.i===0&&S.enableMusic){if(recording&&bgSource&&bgSource.mediaElement){bgSource.mediaElement.currentTime=0;bgSource.mediaElement.play().catch(function(){})}else{playBgMusic()}}prevSegIdx=q.i}draw(t);updateUI();raf=requestAnimationFrame(tick)}
+function tick(now){if(!playing)return;t+=(now-last)/1000;last=now;var T=total();if(t>=T){if(recording){t=T-.001;draw(t);updateUI();finishRec();return}t=0;stopBgMusic();prevSegIdx=-1}var q=segAt(t);if(q.i!==prevSegIdx){if(q.i>0&&q.i<q.segs.length-1&&S.enableSound){if(recording&&transSource&&transSource.mediaElement){transSource.mediaElement.currentTime=0;transSource.mediaElement.play().catch(function(){})}else{playTransSound()}}if(q.i===0&&S.enableMusic){if(recording&&bgSource&&bgSource.mediaElement){bgSource.mediaElement.currentTime=0;bgSource.mediaElement.play().catch(function(){})}else{playBgMusic()}}prevSegIdx=q.i}draw(t);updateUI();raf=requestAnimationFrame(tick)}
 function play(){if(playing)return;initAudio().then(function(){playing=true;last=performance.now();$("play").innerHTML='<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>';raf=requestAnimationFrame(tick);if(S.enableMusic)playBgMusic()})}
 function pause(){playing=false;cancelAnimationFrame(raf);$("play").innerHTML='<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';stopBgMusic()}
 function redraw(){draw(Math.min(t,total()-.001));updateUI()}
 
 /* ---------- recording ---------- */
-var recorder=null,chunks=[],lastBlob=null,lastExt="webm",resUrl=null,recMime="",audioCtx=null,bgSource=null,transSource=null,destNode=null,renderStartTime=0;
+var recorder=null,chunks=[],lastBlob=null,lastExt="webm",resUrl=null,recMime="",audioCtx=null,bgSource=null,transSource=null,destNode=null;
 async function ensureFonts(){try{await Promise.all(["800","600","400"].map(function(w){return document.fonts.load(w+' 60px "Noto Sans Bengali"',"বাংলা গেজেটা ০১২৩৪৫৬৭৮৯")}))}catch(e){}}
 async function setupAudioForRecording(){
   if(!S.enableMusic&&!S.enableSound)return cv.captureStream(30);
@@ -415,9 +413,9 @@ async function startRec(){
   var cands=["video/mp4;codecs=avc1.640028","video/mp4;codecs=avc1","video/mp4","video/webm;codecs=vp9","video/webm;codecs=vp8","video/webm"];
   recMime=cands.find(function(m){try{return MediaRecorder.isTypeSupported(m)}catch(e){return false}})||"";
   var stream=await setupAudioForRecording();
-  try{recorder=new MediaRecorder(stream,recMime?{mimeType:recMime,videoBitsPerSecond:10000000}:{videoBitsPerSecond:10000000})}catch(e){try{recorder=new MediaRecorder(stream)}catch(e2){toast("Recording could not start in this browser.");hideRenderModal();return}}
+  try{recorder=new MediaRecorder(stream,recMime?{mimeType:recMime,videoBitsPerSecond:8000000}:{videoBitsPerSecond:8000000})}catch(e){try{recorder=new MediaRecorder(stream)}catch(e2){toast("Recording could not start in this browser.");hideRenderModal();return}}
   chunks=[];recorder.ondataavailable=function(e){if(e.data&&e.data.size)chunks.push(e.data)};
-  recording=true;t=0;prevSegIdx=-1;renderStartTime=performance.now();draw(0);updateUI();
+  recording=true;t=0;prevSegIdx=-1;draw(0);updateUI();
   updateRenderProgress(5,"Initializing renderer...");
   var T=total();$("renderTime").textContent="Estimated time: ~"+Math.ceil(T)+"s";
   recorder.start(250);playing=true;last=performance.now();raf=requestAnimationFrame(tick)}
@@ -425,7 +423,6 @@ function finishRec(){
   playing=false;cancelAnimationFrame(raf);stopBgMusic();
   if(audioCtx){try{audioCtx.close()}catch(e){}audioCtx=null;bgSource=null;transSource=null;destNode=null}
   var type=(recorder&&recorder.mimeType)||recMime||"video/webm";
-  updateRenderProgress(95,"Finalizing video...");
   recorder.onstop=function(){recording=false;lastBlob=new Blob(chunks,{type:type});lastExt=type.indexOf("mp4")>=0?"mp4":"webm";if(resUrl){try{URL.revokeObjectURL(resUrl)}catch(e){}}resUrl=URL.createObjectURL(lastBlob);updateRenderProgress(100,"Complete!");setTimeout(showRenderComplete,300);$("rec").disabled=false;$("play").disabled=false;$("scrub").disabled=false;$("play").innerHTML='<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'};
   try{recorder.requestData()}catch(e){}recorder.stop()}
 async function saveFile(name,data){try{var blob=data instanceof Blob?data:new Blob([data],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){try{URL.revokeObjectURL(url)}catch(e){}},5000);toast("Saved");return true}catch(e){toast("Couldn't save: "+((e&&e.message)||"unknown error"));return false}}
