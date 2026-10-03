@@ -812,11 +812,19 @@ main > header > p { margin: 0 0 14px; color: var(--muted); max-width: 62ch; }
     if (plain) { q.set("rest_route", "/news-reel/v1" + path); return root + "/?" + q.toString(); }
     return root + "/wp-json/news-reel/v1" + path + "?" + q.toString();
   }
+  async function diagnose() {
+    var root = siteRoot();
+    var here = (location.protocol === "file:" || location.origin === "null") ? "null (local file)" : location.origin;
+    if (location.protocol === "https:" && /^http:\/\//i.test(root)) return "Blocked: this page is HTTPS but the site address starts with http://. Use https:// for the site address.";
+    try { await fetch(root + "/", { mode: "no-cors" }); }
+    catch (e) { return "Can't reach " + root + " at all. Check the spelling and that the site is online, then try with or without www."; }
+    return "The site is reachable, but the browser blocked the data (CORS). Origin of this page: " + here + ". In WordPress open Settings > News Reel API, set Allowed origins to * and save. If it is already *, confirm the plugin is active and that no cache or security plugin strips headers.";
+  }
   async function api(path, params) {
     if (!siteRoot()) throw new Error("Enter your site address under Site connection.");
     var r;
     try { r = await fetch(apiUrl(path, params, false)); if (r.status === 404) r = await fetch(apiUrl(path, params, true)); }
-    catch (e) { throw new Error("Could not reach the site. Check the address, HTTPS, and the plugin's Allowed origins setting."); }
+    catch (e) { throw new Error(await diagnose()); }
     if (r.status === 401) throw new Error("The API key was rejected.");
     if (r.status === 404) throw new Error("API not found. Is the News Reel Fetch API plugin active?");
     if (!r.ok) throw new Error("Server error " + r.status + ".");
