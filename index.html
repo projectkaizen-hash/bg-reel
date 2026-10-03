@@ -816,7 +816,10 @@ main > header > p { margin: 0 0 14px; color: var(--muted); max-width: 62ch; }
     var root = siteRoot();
     var here = (location.protocol === "file:" || location.origin === "null") ? "null (local file)" : location.origin;
     if (location.protocol === "https:" && /^http:\/\//i.test(root)) return "Blocked: this page is HTTPS but the site address starts with http://. Use https:// for the site address.";
-    try { await fetch(root + "/", { mode: "no-cors" }); }
+    try {
+      var probe = await fetch(apiUrl("/categories", {}, false), { mode: "no-cors", redirect: "manual" });
+      if (probe.type === "opaqueredirect") return "Your site redirects this request (usually http to https, or between www and non-www). Change the Site address to the exact final address shown in your browser when you open the site, for example https://www.yoursite.com.";
+    }
     catch (e) { return "Can't reach " + root + " at all. Check the spelling and that the site is online, then try with or without www."; }
     return "The site is reachable, but the browser blocked the data (CORS). Origin of this page: " + here + ". In WordPress open Settings > News Reel API, set Allowed origins to * and save. If it is already *, confirm the plugin is active and that no cache or security plugin strips headers.";
   }
