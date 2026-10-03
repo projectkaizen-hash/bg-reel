@@ -812,15 +812,20 @@ main > header > p { margin: 0 0 14px; color: var(--muted); max-width: 62ch; }
     if (plain) { q.set("rest_route", "/news-reel/v1" + path); return root + "/?" + q.toString(); }
     return root + "/wp-json/news-reel/v1" + path + "?" + q.toString();
   }
+  function viaSite(u) {
+    try { var x = new URL(u); if (x.pathname.indexOf("/wp-json/") === 0) return siteRoot() + x.pathname + x.search; } catch (e) { /* keep as is */ }
+    return u;
+  }
   async function diagnose() {
     var root = siteRoot();
     var here = (location.protocol === "file:" || location.origin === "null") ? "null (local file)" : location.origin;
     if (location.protocol === "https:" && /^http:\/\//i.test(root)) return "Blocked: this page is HTTPS but the site address starts with http://. Use https:// for the site address.";
+    try { await fetch(root + "/", { mode: "no-cors" }); }
+    catch (e) { return "Can't reach " + root + " at all. Check the spelling and that the site is online, then try with or without www."; }
     try {
       var probe = await fetch(apiUrl("/categories", {}, false), { mode: "no-cors", redirect: "manual" });
-      if (probe.type === "opaqueredirect") return "Your site redirects this request (usually http to https, or between www and non-www). Change the Site address to the exact final address shown in your browser when you open the site, for example https://www.yoursite.com.";
-    }
-    catch (e) { return "Can't reach " + root + " at all. Check the spelling and that the site is online, then try with or without www."; }
+      if (probe && probe.type === "opaqueredirect") return "Your site redirects this request (usually http to https, or between www and non-www). Change the Site address to the exact final address shown in your browser when you open the site, for example https://www.yoursite.com.";
+    } catch (e) { /* this probe is optional; fall through */ }
     return "The site is reachable, but the browser blocked the data (CORS). Origin of this page: " + here + ". In WordPress open Settings > News Reel API, set Allowed origins to * and save. If it is already *, confirm the plugin is active and that no cache or security plugin strips headers.";
   }
   async function api(path, params) {
@@ -888,7 +893,7 @@ main > header > p { margin: 0 0 14px; color: var(--muted); max-width: 62ch; }
       await Promise.all(next.map(async function (c) {
         if (!c._px) return;
         try {
-          var r = await fetch(c._px);
+          var r = await fetch(viaSite(c._px));
           if (!r.ok) throw new Error("img " + r.status);
           c.img = await fileToDataUrl(await r.blob()); c._el = await loadEl(c.img);
         } catch (e) { /* leave this card without a photo */ }
