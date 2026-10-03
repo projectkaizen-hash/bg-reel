@@ -161,7 +161,7 @@ main>.panel+.panel{margin-top:14px}
 (function(){
 "use strict";
 /* ---------- embedded connection ---------- */
-var SITE="https://banglagazeta.com", API_KEY="DjVf3drWcsQjwlsjv3Y82M0214VaEiFK1QPORd3f", API=SITE+"/wp-json/news-reel/v1";
+var SITE="https://banglagazeta.com", API_KEY="DjVf3drWcsQjwlsjv3Y82M0214VaEiFK1QPORd3f", API="/wp-json/news-reel/v1";
 
 var W=1080,H=1920,INTRO=3,OUTRO=3.4,WIPE=.55;
 var FONT='"Noto Sans Bengali","Hind Siliguri","Kalpurush","Nirmala UI","Noto Sans",sans-serif';
@@ -364,14 +364,14 @@ $("saveVid").addEventListener("click",function(){if(lastBlob)saveFile("news-reel
 var FKEY="news-reel-fetch-v2",fopt={count:8,cat:"",today:false};
 try{Object.assign(fopt,JSON.parse(localStorage.getItem(FKEY)||"{}"))}catch(e){}
 function saveF(){try{localStorage.setItem(FKEY,JSON.stringify(fopt))}catch(e){}}
-function apiUrl(path,params,plain){var q=new URLSearchParams(params||{});q.set("key",API_KEY);if(plain){q.set("rest_route","/news-reel/v1"+path);return SITE+"/?"+q}return API+path+"?"+q}
+function apiUrl(path,params,plain){var q=new URLSearchParams(params||{});q.set("key",API_KEY);if(plain){q.set("rest_route","/news-reel/v1"+path);return "/?"+q}return API+path+"?"+q}
 async function api(path,params){
   var r;try{r=await fetch(apiUrl(path,params,false));if(r.status===404)r=await fetch(apiUrl(path,params,true))}catch(e){throw new Error("Can't reach banglagazeta.com. Check your connection; if it persists, the site's CORS setting must allow this page.")}
   if(r.status===401||r.status===403)throw new Error("The API key was rejected.");
   if(!r.ok)throw new Error("Server error "+r.status+".");
   try{return await r.json()}catch(e){throw new Error("The site did not return JSON.")}}
 async function loadCats(){var sel=$("fCat");sel.length=1;try{var d=await api("/categories");(d.categories||[]).forEach(function(c){var o=document.createElement("option");o.value=String(c.id);o.textContent=c.name+" ("+c.count+")";sel.appendChild(o)});sel.value=String(fopt.cat||"");if(sel.value!==String(fopt.cat||"")){sel.value="";fopt.cat=""}}catch(e){}}
-function absUrl(u){try{return new URL(u,SITE).href}catch(e){return u}}
+function absUrl(u){try{var x=new URL(u,SITE);if(x.pathname.indexOf("/wp-json/")===0)return x.pathname+x.search;return x.href}catch(e){return u}}
 async function getImg(p){var urls=[p.image&&p.image.proxy,p.image&&p.image.url].filter(Boolean).map(absUrl);for(var i=0;i<urls.length;i++){try{var r=await fetch(urls[i]);if(r.ok)return await fileToDataUrl(await r.blob())}catch(e){}}return null}
 var fetching=false;
 async function fetchPosts(){
