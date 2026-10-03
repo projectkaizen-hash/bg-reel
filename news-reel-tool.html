@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>News photo-card reel template</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;800&display=swap">
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #eef0ec;
+  --panel: #ffffff;
+  --ink: #15191c;
+  --muted: #5d666b;
+  --line: #d5dad6;
+  --field: #f4f6f3;
+  --accent: #0a9b62;
+  --accent-ink: #ffffff;
+  --danger: #b3261e;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101412;
+    --panel: #181e1b;
+    --ink: #e8ede9;
+    --muted: #93a09a;
+    --line: #2b3430;
+    --field: #202823;
+    --accent: #2fc88a;
+    --accent-ink: #06130d;
+    --danger: #ff8a80;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101412;
+  --panel: #181e1b;
+  --ink: #e8ede9;
+  --muted: #93a09a;
+  --line: #2b3430;
+  --field: #202823;
+  --accent: #2fc88a;
+  --accent-ink: #06130d;
+  --danger: #ff8a80;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+*, *::before, *::after { box-sizing: inherit; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Noto Sans Bengali", system-ui, -apple-system, "Segoe UI", Roboto, "Nirmala UI", sans-serif;
+  font-size: 15px;
+  line-height: 1.45;
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+.app {
+  display: grid;
+  grid-template-columns: minmax(300px, 400px) minmax(0, 1fr);
+  gap: 24px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 20px 16px 48px;
+  align-items: start;
+}
+.left { position: sticky; top: 12px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.stage { background: #000; border-radius: 22px; overflow: hidden; width: 100%; max-width: 360px; margin: 0 auto; aspect-ratio: 9 / 16; box-shadow: 0 1px 0 var(--line), 0 18px 40px rgba(0,0,0,.18); }
+.stage canvas { display: block; width: 100%; height: 100%; }
+.transport { display: flex; align-items: center; gap: 10px; max-width: 360px; width: 100%; margin: 0 auto; }
+.transport input[type=range] { flex: 1; min-width: 0; accent-color: var(--accent); }
+.time { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 13px; white-space: nowrap; }
+.btn {
+  appearance: none; border: 1px solid var(--line); background: var(--panel); color: var(--ink);
+  border-radius: 10px; padding: 8px 13px; cursor: pointer; font-weight: 600; font-size: 14px; line-height: 1.2;
+}
+.btn:hover { border-color: var(--muted); }
+.btn:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.small { padding: 6px 10px; font-size: 13px; }
+.btn[disabled] { opacity: .5; cursor: not-allowed; }
+.btn.ghost { background: transparent; }
+.recrow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; max-width: 360px; width: 100%; margin: 0 auto; }
+.status { color: var(--muted); font-size: 13px; }
+#result { max-width: 360px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+#result video { width: 100%; border-radius: 14px; background: #000; max-height: 420px; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px; max-width: 360px; width: 100%; margin: 0 auto; }
+.panel h2 { margin: 0 0 12px; font-size: 15px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; min-width: 0; }
+.field > span { font-size: 12.5px; color: var(--muted); }
+.field input[type=text], .field select, .field textarea, .card input[type=text], .card textarea {
+  width: 100%; border: 1px solid var(--line); background: var(--field); border-radius: 9px; padding: 8px 10px; min-width: 0;
+}
+.field input[type=color] { width: 100%; height: 38px; padding: 2px; border: 1px solid var(--line); background: var(--field); border-radius: 9px; }
+.field input[type=range] { accent-color: var(--accent); width: 100%; }
+.check { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.check input { accent-color: var(--accent); width: 18px; height: 18px; }
+main h1 { margin: 0 0 4px; font-size: 22px; line-height: 1.25; }
+main > header > p { margin: 0 0 14px; color: var(--muted); max-width: 62ch; }
+.toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+#list { display: flex; flex-direction: column; gap: 12px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 12px; }
+.card.off { opacity: .55; }
+.card-h { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.card-h .btns { display: flex; gap: 6px; }
+.card-body { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 12px; }
+.thumb { width: 112px; aspect-ratio: 9 / 16; border-radius: 10px; overflow: hidden; background: var(--field); border: 1px dashed var(--line); display: grid; place-items: center; color: var(--muted); font-size: 12px; text-align: center; padding: 6px; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.fields { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.fields textarea { resize: vertical; }
+.row-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 14px; max-width: min(92vw, 460px); z-index: 20; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.note { color: var(--muted); font-size: 13px; margin: 0; }
+.fetchbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 12px; margin-bottom: 14px; }
+.fetchbar[hidden] { display: none; }
+.fetchbar .inl { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+.fetchbar select { border: 1px solid var(--line); background: var(--field); border-radius: 9px; padding: 7px 8px; max-width: 200px; }
+.fetchbar details { flex-basis: 100%; }
+.fetchbar summary { cursor: pointer; font-weight: 600; font-size: 13px; color: var(--muted); }
+.fetchbar details .grid2 { margin-top: 10px; }
+.fetchbar .status { flex-basis: 100%; min-height: 1.2em; }
+@media (min-width: 861px) {
+  .left { max-height: calc(100vh - 24px); overflow-y: auto; padding-right: 4px; }
+}
+@media (max-width: 860px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .left { position: static; }
+}
+@media (max-width: 420px) {
+  .card-body { grid-template-columns: 88px minmax(0, 1fr); }
+  .thumb { width: 88px; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="left" aria-label="Preview and settings">
+    <div class="stage"><canvas id="cv" width="1080" height="1920" aria-label="Reel preview"></canvas></div>
+    <div class="transport">
+      <button class="btn small" id="play" type="button">Play</button>
+      <input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Timeline">
+      <span class="time" id="time">0:00 / 0:00</span>
+    </div>
+    <div class="recrow">
+      <button class="btn primary" id="rec" type="button">Record video</button>
+      <span class="status" id="recStatus"></span>
+    </div>
+    <div id="result" hidden>
+      <video id="resVideo" controls playsinline></video>
+      <button class="btn" id="saveVid" type="button">Save video</button>
+    </div>
+
+    <section class="panel" aria-labelledby="sh">
+      <h2 id="sh">Reel settings</h2>
+      <label class="field"><span>Brand name</span><input type="text" data-s="brand"></label>
+      <label class="field"><span>Opening title</span><input type="text" data-s="title"></label>
+      <label class="field"><span>Date line (leave empty for today's date)</span><input type="text" data-s="date" placeholder="Auto"></label>
+      <div class="grid2">
+        <label class="field"><span>Closing headline</span><input type="text" data-s="outroTitle"></label>
+        <label class="field"><span>Closing link / line</span><input type="text" data-s="outroSub"></label>
+      </div>
+      <div class="grid2">
+        <label class="field"><span>Card layout</span>
+          <select data-s="layout">
+            <option value="overlay">Full photo, text on top</option>
+            <option value="split">Photo above, text panel below</option>
+          </select>
+        </label>
+        <label class="field"><span>Text panel (split layout)</span>
+          <select data-s="panel"><option value="dark">Dark</option><option value="light">Light</option></select>
+        </label>
+      </div>
+      <div class="grid2">
+        <label class="field"><span>Accent colour</span><input type="color" data-s="accent"></label>
+        <label class="field"><span>Seconds per card: <b id="durLabel">5</b></span><input type="range" min="3" max="10" step="0.5" data-s="dur"></label>
+      </div>
+      <label class="check"><input type="checkbox" data-s="progress"> Story-style progress bar</label>
+    </section>
+  </aside>
+
+  <main>
+    <header>
+      <h1>News photo-card reel</h1>
+      <p>Connect your site once, then fetch your latest posts in one click, tweak the cards, then record a vertical 1080×1920 video. Your wording and settings are remembered in this browser; use Export to keep the photos too.</p>
+    </header>
+    <section class="fetchbar" id="fetchBar" aria-label="Fetch posts from your site">
+      <details id="connBox">
+        <summary>Site connection</summary>
+        <div class="grid2">
+          <label class="field"><span>Site address</span><input type="text" id="cUrl" placeholder="https://yoursite.com" autocomplete="off" spellcheck="false"></label>
+          <label class="field"><span>API key (Settings &rarr; News Reel API)</span><input type="text" id="cKey" autocomplete="off" spellcheck="false"></label>
+        </div>
+      </details>
+      <button class="btn primary" id="fetchBtn" type="button">Fetch latest posts</button>
+      <label class="inl"><span>Posts</span>
+        <select id="fCount"><option>5</option><option>6</option><option>8</option><option>10</option><option>12</option><option>15</option></select>
+      </label>
+      <label class="inl"><span>Category</span>
+        <select id="fCat"><option value="">All categories</option></select>
+      </label>
+      <label class="check"><input type="checkbox" id="fToday"> Today only</label>
+      <span class="status" id="fStatus" role="status"></span>
+    </section>
+    <div class="toolbar">
+      <button class="btn" id="addCard" type="button">Add card</button>
+      <label class="btn" style="cursor:pointer">Add photos in order<input id="bulk" type="file" accept="image/*" multiple class="visually-hidden"></label>
+      <button class="btn" id="exportT" type="button">Export template</button>
+      <label class="btn" style="cursor:pointer">Import template<input id="importT" type="file" accept="application/json,.json" class="visually-hidden"></label>
+      <button class="btn ghost" id="resetT" type="button">Reset to sample cards</button>
+    </div>
+    <div id="list"></div>
+  </main>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- constants & helpers ---------- */
+  var W = 1080, H = 1920;
+  var FONT = '"Noto Sans Bengali","Hind Siliguri","Kalpurush","Nirmala UI","Noto Sans",sans-serif';
+  var INTRO = 2.6, OUTRO = 3.2;
+  var KEY = "news-reel-template-v1";
+  var BN = "০১২৩৪৫৬৭৮৯";
+  var MONTHS = ["জানুয়ারি","ফেব্রুয়ারি","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগস্ট","সেপ্টেম্বর","অক্টোবর","নভেম্বর","ডিসেম্বর"];
+  function bn(n) { return String(n).replace(/\d/g, function (d) { return BN[d]; }); }
+  function autoDate() { var d = new Date(); return bn(d.getDate()) + " " + MONTHS[d.getMonth()] + " " + bn(d.getFullYear()); }
+  function clamp(v, a, b) { return Math.min(b === undefined ? 1 : b, Math.max(a === undefined ? 0 : a, v)); }
+  function ease(x) { return 1 - Math.pow(1 - x, 3); }
+  function anim(lt, delay, dur) { return clamp((lt - delay) / dur); }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]; }); }
+  function $(id) { return document.getElementById(id); }
+
+  function hex2rgb(h) {
+    h = String(h || "#000").replace("#", "");
+    if (h.length === 3) h = h.split("").map(function (x) { return x + x; }).join("");
+    var n = parseInt(h, 16); if (isNaN(n)) n = 0;
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+  function mix(h, t, a) {
+    var c = hex2rgb(h), d = hex2rgb(t);
+    return "rgb(" + c.map(function (v, i) { return Math.round(v + (d[i] - v) * a); }).join(",") + ")";
+  }
+  function onAccent(h) {
+    var c = hex2rgb(h);
+    var l = (0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]) / 255;
+    return l > 0.62 ? "#111111" : "#ffffff";
+  }
+
+  /* ---------- state ---------- */
+  var SRC = "বাংলা গেজেটা";
+  var SEED = [
+    { on: true, cat: "বিশ্ব", head: "হরমুজ প্রণালীতে থাই ট্যাংকারে হামলা", blurb: "প্রণালি এলাকায় দুটি তেলবাহী ট্যাংকারে ‘অজ্ঞাত বস্তু’র আঘাত। হতাহতের খবর নেই, তদন্ত চলছে।", src: SRC },
+    { on: true, cat: "সারাদেশ", head: "এয়ারপোর্ট কাণ্ডে জামায়াত নেতা আখতারুজ্জামান রিমান্ডে", blurb: "বিমানবন্দরে বিশৃঙ্খলা, সরকারি কাজে বাধা ও নিরাপত্তা কর্মকর্তাকে লাঞ্ছিত করার অভিযোগ।", src: SRC },
+    { on: true, cat: "খেলা", head: "এশিয়ান গেমসে ব্যর্থতার কারণ জানালেন লিটন দাস", blurb: "প্রথমবারের মতো পদক ছাড়াই ফিরছে বাংলাদেশ পুরুষ ক্রিকেট দল।", src: SRC },
+    { on: true, cat: "অর্থনীতি", head: "সেপ্টেম্বরে বাংলাদেশের রপ্তানি আয় ৩.৯৪ বিলিয়ন ডলার", blurb: "পণ্য রপ্তানি আয়ে প্রবৃদ্ধি ৮.৫৪ শতাংশ।", src: SRC },
+    { on: true, cat: "সারাদেশ", head: "রূপগঞ্জে কিশোরীকে দলবদ্ধ ধর্ষণের অভিযোগ, গ্রেপ্তার ৩", blurb: "", src: SRC },
+    { on: true, cat: "ফ্যাক্টচেক", head: "সামাজিক মাধ্যমে ছড়ানো স্বরাষ্ট্রমন্ত্রীর বক্তব্য ভুয়া: রিউমর স্ক্যানার", blurb: "", src: SRC },
+    { on: true, cat: "বিনোদন", head: "নাম বদলেই বদলে গেল ইধিকা পালের ক্যারিয়ার", blurb: "ছোটপর্দা দিয়ে শুরু করে টালিউড ও ঢালিউডে পরিচিত মুখ হয়ে উঠেছেন অভিনেত্রী।", src: SRC },
+    { on: true, cat: "সারাদেশ", head: "ময়মনসিংহে বাসের চাপায় একই পরিবারের চারজনসহ নিহত ৭", blurb: "যাত্রীবাহী বাস ও সিএনজি অটোরিকশার মুখোমুখি সংঘর্ষ; নিহতদের মধ্যে এক অন্তঃসত্ত্বা নারী।", src: SRC },
+    { on: true, cat: "জাতীয়", head: "ঢাকার সাব-রেজিস্টারদের পোস্টিং হবে লটারিতে: আইনমন্ত্রী", blurb: "পোস্টিংয়ে লটারি ব্যবস্থা চালুর উদ্যোগ নেওয়া হচ্ছে বলে জানিয়েছেন আইনমন্ত্রী।", src: SRC }
+  ];
+  var DEFAULTS = { brand: "বাংলা গেজেটা", title: "আজকের শিরোনাম", date: "", outroTitle: "বিস্তারিত পড়ুন", outroSub: "banglagazeta.com", layout: "overlay", panel: "dark", accent: "#0a9b62", dur: 5, progress: true };
+  var S = Object.assign({}, DEFAULTS);
+  var cards = SEED.map(function (c) { return Object.assign({ img: null, _el: null }, c); });
+
+  function persist() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify({ settings: S, cards: cards.map(function (c) { return { on: c.on, cat: c.cat, head: c.head, blurb: c.blurb, src: c.src }; }) }));
+    } catch (e) { /* storage unavailable */ }
+  }
+  function restore() {
+    try {
+      var raw = localStorage.getItem(KEY); if (!raw) return;
+      var o = JSON.parse(raw);
+      if (o && o.settings && Array.isArray(o.cards) && o.cards.length) {
+        S = Object.assign({}, DEFAULTS, o.settings);
+        cards = o.cards.map(function (c) { return { on: c.on !== false, cat: c.cat || "", head: c.head || "", blurb: c.blurb || "", src: c.src || "", img: null, _el: null }; });
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  /* ---------- images ---------- */
+  function loadEl(dataUrl) {
+    return new Promise(function (res) {
+      if (!dataUrl) { res(null); return; }
+      var im = new Image();
+      im.onload = function () { res(im); };
+      im.onerror = function () { res(null); };
+      im.src = dataUrl;
+    });
+  }
+  function fileToDataUrl(file) {
+    return new Promise(function (res, rej) {
+      var fr = new FileReader();
+      fr.onerror = rej;
+      fr.onload = function () {
+        var im = new Image();
+        im.onerror = rej;
+        im.onload = function () {
+          var sc = Math.min(1, 2400 / Math.max(im.width, im.height));
+          var c = document.createElement("canvas");
+          c.width = Math.round(im.width * sc); c.height = Math.round(im.height * sc);
+          c.getContext("2d").drawImage(im, 0, 0, c.width, c.height);
+          res(c.toDataURL("image/jpeg", 0.9));
+        };
+        im.src = fr.result;
+      };
+      fr.readAsDataURL(file);
+    });
+  }
+  async function setPhoto(card, file) {
+    try {
+      card.img = await fileToDataUrl(file);
+      card._el = await loadEl(card.img);
+    } catch (e) { toast("That image could not be read. Try a JPG or PNG."); }
+  }
+
+  /* ---------- canvas drawing ---------- */
+  var cv = $("cv"), ctx = cv.getContext("2d");
+
+  function rr(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+  function rrBottom(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x, y); ctx.lineTo(x + w, y); ctx.lineTo(x + w, y + h - r);
+    ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+    ctx.lineTo(x + r, y + h);
+    ctx.arcTo(x, y + h, x, y + h - r, r);
+    ctx.closePath();
+  }
+  function drawCover(img, x, y, w, h, z) {
+    var ir = img.width / img.height, r = w / h, sw, sh;
+    if (ir > r) { sh = img.height; sw = sh * r; } else { sw = img.width; sh = sw / r; }
+    sw /= z; sh /= z;
+    var sx = (img.width - sw) / 2, sy = (img.height - sh) / 2;
+    ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+    ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+    ctx.restore();
+  }
+  function drawPlaceholder(x, y, w, h, accent, lt, cat) {
+    var g = ctx.createLinearGradient(x, y, x + w, y + h);
+    g.addColorStop(0, mix(accent, "#000000", 0.45)); g.addColorStop(1, "#0a0d0c");
+    ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
+    ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+    ctx.globalAlpha = 0.16; ctx.fillStyle = accent;
+    ctx.beginPath(); ctx.arc(x + w * 0.85, y + h * 0.22, 380 + 18 * Math.sin(lt * 1.5), 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = 0.09;
+    ctx.beginPath(); ctx.arc(x + w * 0.08, y + h * 0.7, 300, 0, Math.PI * 2); ctx.fill();
+    if (cat) {
+      ctx.globalAlpha = 0.07; ctx.fillStyle = "#ffffff"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.font = "800 300px " + FONT; ctx.fillText(cat, x + w / 2, y + h * 0.4);
+    }
+    ctx.restore(); ctx.textAlign = "left";
+  }
+
+  function wrap(text, maxW, font) {
+    ctx.font = font;
+    var words = String(text).split(/\s+/).filter(Boolean), lines = [], cur = "";
+    for (var i = 0; i < words.length; i++) {
+      var test = cur ? cur + " " + words[i] : words[i];
+      if (ctx.measureText(test).width > maxW && cur) { lines.push(cur); cur = words[i]; } else cur = test;
+    }
+    if (cur) lines.push(cur);
+    return lines;
+  }
+  function fitText(text, maxW, maxLines, maxSize, minSize, weight, lh) {
+    var size, font, lines;
+    for (size = maxSize; size >= minSize; size -= 4) {
+      font = weight + " " + size + "px " + FONT; lines = wrap(text, maxW, font);
+      if (lines.length <= maxLines) return { lines: lines, size: size, font: font, lh: size * lh };
+    }
+    size = minSize; font = weight + " " + size + "px " + FONT; lines = wrap(text, maxW, font);
+    if (lines.length > maxLines) {
+      lines = lines.slice(0, maxLines);
+      lines[maxLines - 1] = lines[maxLines - 1].replace(/\s*\S*$/, "") + "…";
+    }
+    return { lines: lines, size: size, font: font, lh: size * lh };
+  }
+
+  function layoutText(c, maxW, maxH, maxLines) {
+    var chipH = 70, g1 = 34, g2 = 26;
+    for (var size = 96; ; size -= 3) {
+      var font = "800 " + size + "px " + FONT;
+      var lines = wrap(c.head || "", maxW, font);
+      if (lines.length > maxLines && size > 48) continue;
+      var bf = c.blurb ? fitText(c.blurb, maxW, 3, 42, 32, "400", 1.5) : null;
+      var hh = lines.length * size * 1.32;
+      var bh = bf ? bf.lines.length * bf.lh : 0;
+      var total = (c.cat ? chipH + g1 : 0) + hh + (bf ? g2 + bh : 0);
+      if (total <= maxH || size <= 48) return { size: size, font: font, lines: lines, bf: bf, hh: hh, bh: bh, total: total, chipH: chipH, g1: g1, g2: g2 };
+    }
+  }
+
+  function textBlock(c, lt, o) {
+    var L = layoutText(c, o.maxW, o.maxH, o.maxLines);
+    var cy = o.anchor === "bottom" ? o.y - L.total : o.y;
+    ctx.textBaseline = "top"; ctx.textAlign = "left";
+    if (c.cat) {
+      var a = ease(anim(lt, 0, 0.45));
+      ctx.save(); ctx.globalAlpha = a; ctx.translate(0, (1 - a) * 40);
+      ctx.font = "800 36px " + FONT;
+      var cw = ctx.measureText(c.cat).width + 56;
+      rr(o.x, cy, cw, L.chipH, L.chipH / 2); ctx.fillStyle = S.accent; ctx.fill();
+      ctx.fillStyle = onAccent(S.accent); ctx.textBaseline = "middle"; ctx.fillText(c.cat, o.x + 28, cy + L.chipH / 2 + 2);
+      ctx.restore(); ctx.textBaseline = "top";
+      cy += L.chipH + L.g1;
+    }
+    var b = ease(anim(lt, 0.12, 0.55));
+    ctx.save(); ctx.globalAlpha = b; ctx.translate(0, (1 - b) * 60);
+    ctx.font = L.font; ctx.fillStyle = o.head; ctx.textBaseline = "top";
+    for (var i = 0; i < L.lines.length; i++) ctx.fillText(L.lines[i], o.x, cy + i * L.size * 1.32);
+    ctx.restore();
+    cy += L.hh;
+    if (L.bf) {
+      cy += L.g2;
+      var d = ease(anim(lt, 0.28, 0.55));
+      ctx.save(); ctx.globalAlpha = d; ctx.translate(0, (1 - d) * 50);
+      ctx.font = L.bf.font; ctx.fillStyle = o.sub; ctx.textBaseline = "top";
+      for (var k = 0; k < L.bf.lines.length; k++) ctx.fillText(L.bf.lines[k], o.x, cy + k * L.bf.lh);
+      ctx.restore();
+    }
+  }
+
+  function brandBar(lt) {
+    var a = ease(anim(lt, 0, 0.5));
+    ctx.save(); ctx.globalAlpha = a;
+    ctx.font = "800 36px " + FONT;
+    var bw = ctx.measureText(S.brand || "").width + 96;
+    rr(72, 92, bw, 76, 38); ctx.fillStyle = "rgba(0,0,0,0.5)"; ctx.fill();
+    ctx.fillStyle = S.accent; ctx.beginPath(); ctx.arc(108, 130, 12, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#ffffff"; ctx.textBaseline = "middle"; ctx.textAlign = "left";
+    ctx.fillText(S.brand || "", 132, 133);
+    ctx.font = "600 32px " + FONT; ctx.textAlign = "right";
+    ctx.shadowColor = "rgba(0,0,0,0.55)"; ctx.shadowBlur = 10;
+    ctx.fillText(S.date.trim() || autoDate(), W - 72, 133);
+    ctx.restore(); ctx.textAlign = "left";
+  }
+
+  function progressBar(idx, n, p) {
+    if (!S.progress || n < 1) return;
+    var gap = 8, total = W - 144, w = (total - gap * (n - 1)) / n;
+    for (var i = 0; i < n; i++) {
+      var x = 72 + i * (w + gap);
+      rr(x, 50, w, 8, 4); ctx.fillStyle = "rgba(255,255,255,0.28)"; ctx.fill();
+      var f = i < idx ? 1 : i === idx ? p : 0;
+      if (f > 0) { rr(x, 50, Math.max(8, w * f), 8, 4); ctx.fillStyle = "#ffffff"; ctx.fill(); }
+    }
+  }
+
+  function footer(c, color, y) {
+    var a = ease(anim(0.9, 0, 1));
+    ctx.save(); ctx.globalAlpha = a;
+    ctx.fillStyle = S.accent; ctx.fillRect(72, y + 4, 56, 6);
+    ctx.font = "600 32px " + FONT; ctx.fillStyle = color; ctx.textBaseline = "top"; ctx.textAlign = "left";
+    ctx.fillText("সূত্র: " + (c.src || S.brand || ""), 150, y - 8);
+    ctx.restore();
+  }
+
+  function drawCard(c, lt, d, idx, n) {
+    var p = lt / d, zoom = 1 + 0.12 * p, padX = 72, maxW = W - padX * 2;
+    if (S.layout === "split") {
+      var light = S.panel === "light";
+      ctx.fillStyle = light ? "#f6f3ec" : "#0d1110"; ctx.fillRect(0, 0, W, H);
+      var ph = 1080;
+      ctx.save(); rrBottom(0, 0, W, ph, 64); ctx.clip();
+      if (c._el) drawCover(c._el, 0, 0, W, ph, zoom); else drawPlaceholder(0, 0, W, ph, S.accent, lt, c.cat);
+      var g2 = ctx.createLinearGradient(0, 0, 0, 320); g2.addColorStop(0, "rgba(0,0,0,0.6)"); g2.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g2; ctx.fillRect(0, 0, W, 320);
+      ctx.restore();
+      textBlock(c, lt, { x: padX, maxW: maxW, y: ph + 64, anchor: "top", maxH: H - 190 - (ph + 64), maxLines: 4, head: light ? "#14171a" : "#ffffff", sub: light ? "#4b5359" : "#c5cdc9" });
+      footer(c, light ? "#4b5359" : "#c5cdc9", H - 120);
+    } else {
+      if (c._el) drawCover(c._el, 0, 0, W, H, zoom); else drawPlaceholder(0, 0, W, H, S.accent, lt, c.cat);
+      var g = ctx.createLinearGradient(0, H * 0.3, 0, H);
+      g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(0.55, "rgba(0,0,0,0.74)"); g.addColorStop(1, "rgba(0,0,0,0.95)");
+      ctx.fillStyle = g; ctx.fillRect(0, H * 0.3, W, H * 0.7);
+      var g3 = ctx.createLinearGradient(0, 0, 0, 320); g3.addColorStop(0, "rgba(0,0,0,0.6)"); g3.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g3; ctx.fillRect(0, 0, W, 320);
+      textBlock(c, lt, { x: padX, maxW: maxW, y: H - 190, anchor: "bottom", maxH: 1000, maxLines: 5, head: "#ffffff", sub: "#dfe4e1" });
+      footer(c, "rgba(255,255,255,0.82)", H - 120);
+    }
+    brandBar(lt);
+    progressBar(idx, n, p);
+  }
+
+  function activeCount() { return cards.filter(function (c) { return c.on; }).length; }
+
+  function drawIntro(lt) {
+    var A = S.accent;
+    var g = ctx.createLinearGradient(0, 0, W, H);
+    g.addColorStop(0, mix(A, "#000000", 0.5)); g.addColorStop(1, "#070908");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    ctx.save(); ctx.globalAlpha = 0.18; ctx.fillStyle = A;
+    ctx.beginPath(); ctx.arc(W * 0.92, H * 0.12, 460 + 20 * Math.sin(lt * 2), 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(W * 0.05, H * 0.88, 360, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    brandBar(lt);
+    var tf = fitText(S.title || "", W - 144, 3, 150, 84, "800", 1.3);
+    var blockH = tf.lines.length * tf.lh, y = H * 0.4 - blockH / 2;
+    ctx.fillStyle = A; ctx.fillRect(72, y - 64, 220 * ease(anim(lt, 0, 0.6)), 12);
+    var a = ease(anim(lt, 0.15, 0.6));
+    ctx.save(); ctx.globalAlpha = a; ctx.translate(0, (1 - a) * 70);
+    ctx.font = tf.font; ctx.fillStyle = "#ffffff"; ctx.textBaseline = "top"; ctx.textAlign = "left";
+    for (var i = 0; i < tf.lines.length; i++) ctx.fillText(tf.lines[i], 72, y + i * tf.lh);
+    ctx.restore();
+    var b = ease(anim(lt, 0.5, 0.5));
+    ctx.save(); ctx.globalAlpha = b; ctx.textBaseline = "top";
+    ctx.font = "600 56px " + FONT; ctx.fillStyle = "rgba(255,255,255,0.94)";
+    ctx.fillText(S.date.trim() || autoDate(), 72, y + blockH + 44);
+    ctx.font = "400 46px " + FONT; ctx.fillStyle = mix(A, "#ffffff", 0.6);
+    ctx.fillText(bn(activeCount()) + "টি খবর", 72, y + blockH + 128);
+    ctx.restore();
+  }
+
+  function drawOutro(lt) {
+    var A = S.accent;
+    var g = ctx.createLinearGradient(0, H, W, 0);
+    g.addColorStop(0, mix(A, "#000000", 0.5)); g.addColorStop(1, "#070908");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    ctx.save(); ctx.globalAlpha = 0.16; ctx.fillStyle = A;
+    ctx.beginPath(); ctx.arc(W * 0.1, H * 0.1, 420, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(W * 0.95, H * 0.85, 480 + 20 * Math.sin(lt * 2), 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    var bf = fitText(S.brand || "", W - 144, 2, 130, 80, "800", 1.3);
+    var a = ease(anim(lt, 0.1, 0.6));
+    var y = H * 0.38;
+    ctx.save(); ctx.globalAlpha = a; ctx.translate(0, (1 - a) * 60);
+    ctx.font = bf.font; ctx.fillStyle = "#ffffff"; ctx.textBaseline = "top"; ctx.textAlign = "left";
+    for (var i = 0; i < bf.lines.length; i++) ctx.fillText(bf.lines[i], 72, y + i * bf.lh);
+    ctx.restore();
+    var yy = y + bf.lines.length * bf.lh + 40;
+    ctx.fillStyle = A; ctx.fillRect(72, yy, 220 * ease(anim(lt, 0.3, 0.6)), 12);
+    var b = ease(anim(lt, 0.5, 0.5));
+    ctx.save(); ctx.globalAlpha = b; ctx.textBaseline = "top";
+    ctx.font = "600 60px " + FONT; ctx.fillStyle = "rgba(255,255,255,0.95)"; ctx.fillText(S.outroTitle || "", 72, yy + 50);
+    if (S.outroSub) {
+      ctx.font = "800 46px " + FONT;
+      var sw = ctx.measureText(S.outroSub).width + 64;
+      rr(72, yy + 150, sw, 84, 42); ctx.fillStyle = A; ctx.fill();
+      ctx.fillStyle = onAccent(A); ctx.textBaseline = "middle"; ctx.fillText(S.outroSub, 104, yy + 194);
+    }
+    ctx.restore();
+  }
+
+  function segments() {
+    var s = [{ type: "intro", d: INTRO }];
+    cards.forEach(function (c) { if (c.on) s.push({ type: "card", d: Number(S.dur) || 5, c: c }); });
+    s.push({ type: "outro", d: OUTRO });
+    return s;
+  }
+  function total() { return segments().reduce(function (a, s) { return a + s.d; }, 0); }
+
+  function draw(t) {
+    var segs = segments(), acc = 0, idx = 0;
+    for (; idx < segs.length; idx++) { if (t < acc + segs[idx].d) break; acc += segs[idx].d; }
+    if (idx >= segs.length) { idx = segs.length - 1; acc -= segs[idx].d; }
+    var s = segs[idx], lt = clamp(t - acc, 0, s.d);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalAlpha = 1; ctx.shadowBlur = 0; ctx.shadowColor = "transparent";
+    ctx.fillStyle = "#000"; ctx.fillRect(0, 0, W, H);
+    if (s.type === "intro") drawIntro(lt);
+    else if (s.type === "outro") drawOutro(lt);
+    else drawCard(s.c, lt, s.d, idx - 1, segs.length - 2);
+    var a = Math.min(clamp(lt / 0.3), clamp((s.d - lt) / 0.25));
+    if (a < 1) { ctx.fillStyle = "rgba(0,0,0," + (1 - a) + ")"; ctx.fillRect(0, 0, W, H); }
+  }
+
+  /* ---------- playback ---------- */
+  var t = 0, playing = false, last = 0, raf = 0, recording = false;
+  function fmt(x) { x = Math.max(0, Math.round(x)); return Math.floor(x / 60) + ":" + String(x % 60).padStart(2, "0"); }
+  function updateUI() {
+    var T = total();
+    $("scrub").value = String(Math.round(t / T * 1000));
+    $("time").textContent = fmt(t) + " / " + fmt(T);
+  }
+  function tick(now) {
+    if (!playing) return;
+    var dt = (now - last) / 1000; last = now; t += dt;
+    var T = total();
+    if (t >= T) {
+      if (recording) { t = T - 0.001; draw(t); updateUI(); finishRec(); return; }
+      t = 0;
+    }
+    draw(t); updateUI();
+    raf = requestAnimationFrame(tick);
+  }
+  function play() { if (playing) return; playing = true; last = performance.now(); $("play").textContent = "Pause"; raf = requestAnimationFrame(tick); }
+  function pause() { playing = false; cancelAnimationFrame(raf); $("play").textContent = "Play"; }
+  function redraw() { draw(Math.min(t, total() - 0.001)); updateUI(); }
+
+  /* ---------- recording ---------- */
+  var recorder = null, chunks = [], lastBlob = null, lastExt = "webm", resUrl = null, recMime = "";
+  async function ensureFonts() {
+    try {
+      await Promise.all([
+        document.fonts.load("800 60px \"Noto Sans Bengali\"", "বাংলা গেজেটা ০১২৩৪৫৬৭৮৯"),
+        document.fonts.load("600 40px \"Noto Sans Bengali\"", "বাংলা গেজেটা ০১২৩৪৫৬৭৮৯"),
+        document.fonts.load("400 40px \"Noto Sans Bengali\"", "বাংলা গেজেটা ০১২৩৪৫৬৭৮৯")
+      ]);
+    } catch (e) { /* fallback fonts will be used */ }
+  }
+  async function startRec() {
+    if (recording) return;
+    if (typeof MediaRecorder === "undefined" || !cv.captureStream) { toast("This browser can't record canvas video. Try Chrome, Edge or Safari 17+."); return; }
+    pause(); await ensureFonts();
+    var cands = ["video/mp4;codecs=avc1.640028", "video/mp4;codecs=avc1", "video/mp4", "video/webm;codecs=vp9", "video/webm;codecs=vp8", "video/webm"];
+    recMime = cands.find(function (m) { try { return MediaRecorder.isTypeSupported(m); } catch (e) { return false; } }) || "";
+    var stream = cv.captureStream(30);
+    try { recorder = new MediaRecorder(stream, recMime ? { mimeType: recMime, videoBitsPerSecond: 8000000 } : { videoBitsPerSecond: 8000000 }); }
+    catch (e) { try { recorder = new MediaRecorder(stream); } catch (e2) { toast("Recording could not start in this browser."); return; } }
+    chunks = [];
+    recorder.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+    recording = true; t = 0; draw(0); updateUI();
+    $("rec").disabled = true; $("play").disabled = true; $("scrub").disabled = true;
+    $("result").hidden = true;
+    $("recStatus").textContent = "Recording in real time. Keep this tab visible.";
+    recorder.start(250);
+    playing = true; last = performance.now(); raf = requestAnimationFrame(tick);
+  }
+  function finishRec() {
+    playing = false; cancelAnimationFrame(raf);
+    var type = (recorder && recorder.mimeType) || recMime || "video/webm";
+    recorder.onstop = function () {
+      recording = false;
+      lastBlob = new Blob(chunks, { type: type });
+      lastExt = type.indexOf("mp4") >= 0 ? "mp4" : "webm";
+      if (resUrl) { try { URL.revokeObjectURL(resUrl); } catch (e) {} }
+      resUrl = URL.createObjectURL(lastBlob);
+      $("resVideo").src = resUrl;
+      $("result").hidden = false;
+      $("recStatus").textContent = "Done. " + (lastBlob.size / 1048576).toFixed(1) + " MB, ." + lastExt;
+      $("rec").disabled = false; $("play").disabled = false; $("scrub").disabled = false;
+      $("play").textContent = "Play";
+    };
+    try { recorder.requestData(); } catch (e) {}
+    recorder.stop();
+  }
+
+  async function saveFile(name, data) {
+    try {
+      var blob = (typeof Blob !== "undefined" && data instanceof Blob) ? data : new Blob([data], { type: "application/json" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { try { URL.revokeObjectURL(url); } catch (e) {} }, 5000);
+      toast("Saved"); return true;
+    } catch (e) { toast("Couldn't save: " + ((e && e.message) || "unknown error")); return false; }
+  }
+
+  /* ---------- toast ---------- */
+  var toastTimer = 0;
+  function toast(msg) {
+    var el = $("toast"); el.textContent = msg; el.hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { el.hidden = true; }, 4200);
+  }
+
+  /* ---------- editor list ---------- */
+  function renderList() {
+    var list = $("list");
+    list.innerHTML = cards.map(function (c, i) {
+      return '<div class="card' + (c.on ? "" : " off") + '" data-i="' + i + '">' +
+        '<div class="card-h">' +
+          '<label class="check"><input type="checkbox" data-k="on"' + (c.on ? " checked" : "") + '> Card ' + (i + 1) + '</label>' +
+          '<div class="btns">' +
+            '<button class="btn small" type="button" data-act="seek">Preview</button>' +
+            '<button class="btn small" type="button" data-act="up" aria-label="Move up"' + (i === 0 ? " disabled" : "") + '>↑</button>' +
+            '<button class="btn small" type="button" data-act="down" aria-label="Move down"' + (i === cards.length - 1 ? " disabled" : "") + '>↓</button>' +
+            '<button class="btn small" type="button" data-act="del" aria-label="Delete card">Delete</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="card-body">' +
+          '<div class="thumb">' + (c.img ? '<img alt="" src="' + c.img + '">' : "No photo yet") + '</div>' +
+          '<div class="fields">' +
+            '<input type="text" data-k="cat" placeholder="Category" value="' + esc(c.cat) + '" aria-label="Category">' +
+            '<textarea data-k="head" rows="2" placeholder="Headline" aria-label="Headline">' + esc(c.head) + '</textarea>' +
+            '<textarea data-k="blurb" rows="2" placeholder="Short line under the headline (optional)" aria-label="Short line">' + esc(c.blurb) + '</textarea>' +
+            '<input type="text" data-k="src" placeholder="Source" value="' + esc(c.src) + '" aria-label="Source">' +
+            '<div class="row-btns">' +
+              '<label class="btn small" style="cursor:pointer">' + (c.img ? "Replace photo" : "Add photo") + '<input type="file" accept="image/*" data-act="photo" class="visually-hidden"></label>' +
+              (c.img ? '<button class="btn small ghost" type="button" data-act="clearimg">Remove photo</button>' : "") +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }).join("");
+    if (!cards.length) list.innerHTML = '<p class="note">No cards yet. Add one to start.</p>';
+  }
+
+  function cardIndexOf(el) { var n = el.closest(".card"); return n ? Number(n.getAttribute("data-i")) : -1; }
+
+  $("list").addEventListener("input", function (e) {
+    var k = e.target.getAttribute("data-k"); if (!k) return;
+    var i = cardIndexOf(e.target); if (i < 0) return;
+    if (k === "on") { cards[i].on = e.target.checked; e.target.closest(".card").classList.toggle("off", !cards[i].on); }
+    else cards[i][k] = e.target.value;
+    persist(); redraw();
+  });
+  $("list").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-act]"); if (!b || b.tagName === "INPUT") return;
+    var i = cardIndexOf(b); if (i < 0) return;
+    var act = b.getAttribute("data-act");
+    if (act === "up" && i > 0) { var x = cards.splice(i, 1)[0]; cards.splice(i - 1, 0, x); renderList(); persist(); redraw(); }
+    else if (act === "down" && i < cards.length - 1) { var y = cards.splice(i, 1)[0]; cards.splice(i + 1, 0, y); renderList(); persist(); redraw(); }
+    else if (act === "del") { cards.splice(i, 1); renderList(); persist(); redraw(); }
+    else if (act === "clearimg") { cards[i].img = null; cards[i]._el = null; renderList(); redraw(); }
+    else if (act === "seek") {
+      if (!cards[i].on) { toast("Turn this card on to preview it."); return; }
+      var before = cards.slice(0, i).filter(function (c) { return c.on; }).length;
+      pause(); t = INTRO + before * (Number(S.dur) || 5) + 1.4; redraw();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  });
+  $("list").addEventListener("change", async function (e) {
+    if (e.target.getAttribute("data-act") !== "photo") return;
+    var i = cardIndexOf(e.target), f = e.target.files && e.target.files[0]; if (i < 0 || !f) return;
+    await setPhoto(cards[i], f); renderList(); redraw();
+  });
+
+  $("addCard").addEventListener("click", function () {
+    cards.push({ on: true, cat: "", head: "", blurb: "", src: S.brand, img: null, _el: null });
+    renderList(); persist(); redraw();
+    var last = $("list").lastElementChild; if (last) last.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+  $("bulk").addEventListener("change", async function (e) {
+    var files = Array.prototype.slice.call(e.target.files || []); if (!files.length) return;
+    var targets = cards.filter(function (c) { return c.on; });
+    for (var i = 0; i < files.length && i < targets.length; i++) await setPhoto(targets[i], files[i]);
+    if (files.length > targets.length) toast(files.length - targets.length + " extra photo(s) skipped. Add cards to use them.");
+    e.target.value = ""; renderList(); redraw();
+  });
+  $("resetT").addEventListener("click", function () {
+    if (!window.confirm("Replace the current cards and settings with the sample cards? Photos you added will be removed.")) return;
+    S = Object.assign({}, DEFAULTS);
+    cards = SEED.map(function (c) { return Object.assign({ img: null, _el: null }, c); });
+    syncSettings(); renderList(); persist(); t = 0; redraw();
+  });
+  $("exportT").addEventListener("click", function () {
+    var payload = { version: 1, settings: S, cards: cards.map(function (c) { return { on: c.on, cat: c.cat, head: c.head, blurb: c.blurb, src: c.src, img: c.img }; }) };
+    saveFile("news-reel-template.json", JSON.stringify(payload));
+  });
+  $("importT").addEventListener("change", async function (e) {
+    var f = e.target.files && e.target.files[0]; if (!f) return;
+    try {
+      var o = JSON.parse(await f.text());
+      if (!o || !o.settings || !Array.isArray(o.cards)) throw new Error("bad");
+      S = Object.assign({}, DEFAULTS, o.settings);
+      cards = await Promise.all(o.cards.map(async function (c) {
+        var img = typeof c.img === "string" && c.img.indexOf("data:image/") === 0 ? c.img : null;
+        return { on: c.on !== false, cat: c.cat || "", head: c.head || "", blurb: c.blurb || "", src: c.src || "", img: img, _el: await loadEl(img) };
+      }));
+      syncSettings(); renderList(); persist(); t = 0; redraw(); toast("Template imported");
+    } catch (err) { toast("That file isn't a reel template."); }
+    e.target.value = "";
+  });
+
+  /* ---------- settings panel ---------- */
+  function syncSettings() {
+    document.querySelectorAll("[data-s]").forEach(function (el) {
+      var k = el.getAttribute("data-s");
+      if (el.type === "checkbox") el.checked = !!S[k]; else el.value = S[k];
+    });
+    $("durLabel").textContent = String(S.dur);
+  }
+  document.querySelectorAll("[data-s]").forEach(function (el) {
+    el.addEventListener("input", function () {
+      var k = el.getAttribute("data-s");
+      S[k] = el.type === "checkbox" ? el.checked : (k === "dur" ? Number(el.value) : el.value);
+      if (k === "dur") $("durLabel").textContent = String(S.dur);
+      persist(); redraw();
+    });
+  });
+
+  /* ---------- transport wiring ---------- */
+  $("play").addEventListener("click", function () { if (playing) pause(); else play(); });
+  $("scrub").addEventListener("input", function (e) { pause(); t = Number(e.target.value) / 1000 * total(); redraw(); });
+  $("rec").addEventListener("click", startRec);
+  $("saveVid").addEventListener("click", function () {
+    if (!lastBlob) return;
+    saveFile("news-reel-" + new Date().toISOString().slice(0, 10) + "." + lastExt, lastBlob);
+  });
+
+  /* ---------- Site fetch (News Reel Fetch API) ---------- */
+  var CKEY = "news-reel-conn-v1", FKEY = "news-reel-fetch-v1";
+  var conn = { url: "", key: "" };
+  var fopt = { count: 8, cat: "", today: false };
+  try { Object.assign(conn, JSON.parse(localStorage.getItem(CKEY) || "{}")); } catch (e) { /* ignore */ }
+  try { Object.assign(fopt, JSON.parse(localStorage.getItem(FKEY) || "{}")); } catch (e) { /* ignore */ }
+  function saveConn() { try { localStorage.setItem(CKEY, JSON.stringify(conn)); } catch (e) {} }
+  function saveFopt() { try { localStorage.setItem(FKEY, JSON.stringify(fopt)); } catch (e) {} }
+
+  function siteRoot() {
+    var u = String(conn.url || "").trim().replace(/\/+$/, "");
+    if (!u) return "";
+    if (!/^https?:\/\//i.test(u)) u = "https://" + u;
+    return u;
+  }
+  function apiUrl(path, params, plain) {
+    var root = siteRoot(), q = new URLSearchParams(params || {});
+    if (conn.key && conn.key.trim()) q.set("key", conn.key.trim());
+    if (plain) { q.set("rest_route", "/news-reel/v1" + path); return root + "/?" + q.toString(); }
+    return root + "/wp-json/news-reel/v1" + path + "?" + q.toString();
+  }
+  async function api(path, params) {
+    if (!siteRoot()) throw new Error("Enter your site address under Site connection.");
+    var r;
+    try { r = await fetch(apiUrl(path, params, false)); if (r.status === 404) r = await fetch(apiUrl(path, params, true)); }
+    catch (e) { throw new Error("Could not reach the site. Check the address, HTTPS, and the plugin's Allowed origins setting."); }
+    if (r.status === 401) throw new Error("The API key was rejected.");
+    if (r.status === 404) throw new Error("API not found. Is the News Reel Fetch API plugin active?");
+    if (!r.ok) throw new Error("Server error " + r.status + ".");
+    try { return await r.json(); } catch (e) { throw new Error("The site did not return JSON."); }
+  }
+  async function loadCats() {
+    var sel = $("fCat");
+    sel.length = 1;
+    if (!siteRoot()) return;
+    try {
+      var d = await api("/categories");
+      (d.categories || []).forEach(function (c) {
+        var o = document.createElement("option"); o.value = String(c.id); o.textContent = c.name + " (" + c.count + ")"; sel.appendChild(o);
+      });
+      sel.value = String(fopt.cat || ""); if (sel.value !== String(fopt.cat || "")) { sel.value = ""; fopt.cat = ""; }
+    } catch (e) { /* categories are optional */ }
+  }
+
+  function initFetchBar() {
+    $("cUrl").value = conn.url || ""; $("cKey").value = conn.key || "";
+    if (!conn.url) $("connBox").open = true;
+    $("fCount").value = String(fopt.count);
+    if ($("fCount").value !== String(fopt.count)) $("fCount").value = "8";
+    $("fToday").checked = !!fopt.today;
+    function onConn() { conn.url = $("cUrl").value; conn.key = $("cKey").value; saveConn(); }
+    $("cUrl").addEventListener("input", onConn); $("cKey").addEventListener("input", onConn);
+    $("cUrl").addEventListener("change", loadCats); $("cKey").addEventListener("change", loadCats);
+    $("fCount").addEventListener("change", function () { fopt.count = Number($("fCount").value); saveFopt(); });
+    $("fCat").addEventListener("change", function () { fopt.cat = $("fCat").value; saveFopt(); });
+    $("fToday").addEventListener("change", function () { fopt.today = $("fToday").checked; saveFopt(); });
+    $("fetchBtn").addEventListener("click", fetchPosts);
+    loadCats();
+  }
+
+  var fetching = false;
+  async function fetchPosts() {
+    if (fetching || recording) return;
+    fetching = true;
+    var btn = $("fetchBtn"), st = $("fStatus");
+    btn.disabled = true; pause(); st.textContent = "Fetching posts…";
+    try {
+      var params = { count: fopt.count };
+      if (fopt.cat) params.category = fopt.cat;
+      if (fopt.today) params.today = 1;
+      var data = await api("/posts", params);
+      var posts = data.posts || [];
+      if (!posts.length) {
+        st.textContent = fopt.today ? "No posts published today. Untick “Today only” to get the latest ones." : "No published posts found for that selection.";
+        return;
+      }
+      $("connBox").open = false;
+      var next = posts.map(function (p) {
+        return { on: true, cat: p.category || "", head: p.title || "", blurb: p.excerpt || "", src: S.brand || "", img: null, _el: null, _px: p.image && (p.image.proxy || p.image.url) || "" };
+      });
+      cards = next; t = 0; renderList(); persist(); redraw();
+      var withImg = next.filter(function (c) { return c._px; }).length, done = 0;
+      if (withImg) st.textContent = "Loading photos 0/" + withImg + "…";
+      await Promise.all(next.map(async function (c) {
+        if (!c._px) return;
+        try {
+          var r = await fetch(c._px);
+          if (!r.ok) throw new Error("img " + r.status);
+          c.img = await fileToDataUrl(await r.blob()); c._el = await loadEl(c.img);
+        } catch (e) { /* leave this card without a photo */ }
+        done++; st.textContent = "Loading photos " + done + "/" + withImg + "…"; redraw();
+      }));
+      var ok = next.filter(function (c) { return c.img; }).length;
+      renderList(); redraw();
+      st.textContent = next.length + " posts loaded, " + ok + " with photos." + (ok < next.length ? " Add photos to the rest below." : " Press Play or Record video.");
+    } catch (e) {
+      st.textContent = "Fetch failed: " + ((e && e.message) || "unknown error");
+    } finally {
+      fetching = false; btn.disabled = false;
+    }
+  }
+
+  /* ---------- init ---------- */
+  restore();
+  initFetchBar();
+  syncSettings();
+  renderList();
+  draw(0); updateUI();
+  ensureFonts().then(function () { redraw(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { redraw(); });
+})();
+</script>
+</body>
+</html>
