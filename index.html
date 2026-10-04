@@ -137,29 +137,13 @@ body{margin:0;font-family:"Inter","Noto Sans Bengali",system-ui,-apple-system,sa
         <label class="inline-flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300"><input type="checkbox" data-s="enableMusic" class="w-4 h-4 rounded border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-50 focus:ring-slate-900 dark:focus:ring-slate-50"> Enable background music</label>
         <label class="inline-flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300"><input type="checkbox" data-s="enableSound" class="w-4 h-4 rounded border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-50 focus:ring-slate-900 dark:focus:ring-slate-50"> Enable transition sounds</label>
       </div>
+      <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+        <label class="inline-flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 mb-3"><input type="checkbox" data-s="enableVoice" class="w-4 h-4 rounded border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-50 focus:ring-slate-900 dark:focus:ring-slate-50"> Enable AI voice (reads headlines)</label>
+        <label class="flex flex-col gap-1.5"><span class="text-sm font-medium text-slate-700 dark:text-slate-300">Voice volume: <b id="voiceVolLabel" class="text-slate-900 dark:text-slate-50">80</b>%</span><input type="range" min="0" max="100" data-s="voiceVol" class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-slate-900 dark:accent-slate-50"></label>
+      </div>
       <div class="flex flex-wrap items-center gap-3 mt-4">
         <button class="inline-flex items-center px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 transition-colors" id="audioReset" type="button">Clear audio files</button>
         <span class="status text-sm text-slate-500 dark:text-slate-400" id="audioStatus"></span>
-      </div>
-    </section>
-
-    <section class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm" aria-labelledby="vt">
-      <h2 id="vt" class="text-sm font-semibold text-slate-900 dark:text-slate-50 uppercase tracking-wider mb-4">AI Voice (ElevenLabs)</h2>
-      <label class="flex flex-col gap-1.5"><span class="text-sm font-medium text-slate-700 dark:text-slate-300">ElevenLabs API Key</span><input type="password" id="sk_c6f0b778eec9b91e80fc23921b0b3470277fe1d75c319a66" placeholder="Enter your ElevenLabs API key" class="px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-50"></label>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-        <label class="flex flex-col gap-1.5"><span class="text-sm font-medium text-slate-700 dark:text-slate-300">Voice ID</span><input type="text" id="voiceId" placeholder="e.g., 21m00Tcm4TlvDq8ikWAM" class="px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-50"></label>
-        <label class="flex flex-col gap-1.5"><span class="text-sm font-medium text-slate-700 dark:text-slate-300">Voice volume: <b id="voiceVolLabel" class="text-slate-900 dark:text-slate-50">80</b>%</span><input type="range" id="voiceVol" min="0" max="100" value="80" class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-slate-900 dark:accent-slate-50"></label>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-        <label class="inline-flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300"><input type="checkbox" id="enableVoice" class="w-4 h-4 rounded border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-50 focus:ring-slate-900 dark:focus:ring-slate-50"> Enable AI voice for headlines</label>
-        <button class="inline-flex items-center px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors" id="fetchVoices" type="button">Fetch available voices</button>
-      </div>
-      <div class="mt-4">
-        <span class="text-sm text-slate-500 dark:text-slate-400" id="voiceStatus">Get your API key from <a href="https://elevenlabs.io" target="_blank" class="text-slate-700 dark:text-slate-300 underline">elevenlabs.io</a></span>
-      </div>
-      <div id="voiceList" class="mt-4 hidden">
-        <label class="text-sm font-medium text-slate-700 dark:text-slate-300">Select a voice:</label>
-        <select id="voiceSelect" class="mt-2 w-full px-3 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-50"></select>
       </div>
     </section>
 
@@ -261,7 +245,7 @@ var SEED=[
 {on:true,cat:"বিশ্ব",head:"হরমুজ প্রণালীতে থাই ট্যাংকারে হামলা",blurb:"প্রণালি এলাকায় দুটি তেলবাহী ট্যাংকারে ‘অজ্ঞাত বস্তু’র আঘাত। হতাহতের খবর নেই।"},
 {on:true,cat:"অর্থনীতি",head:"সেপ্টেম্বরে বাংলাদেশের রপ্তানি আয় ৩.৯৪ বিলিয়ন ডলার",blurb:"পণ্য রপ্তানি আয়ে প্রবৃদ্ধি ৮.৫৪ শতাংশ।"},
 {on:true,cat:"খেলা",head:"এশিয়ান গেমসে ব্যর্থতার কারণ জানালেন লিটন দাস",blurb:""}];
-var DEFAULTS={brand:"বাংলা গেজেটা",title:"আজকের শিরোনাম",date:"",outroTitle:"বিস্তারিত পড়ুন",outroSub:"banglagazeta.com",layout:"overlay",panel:"dark",accent:"#0a9b62",dur:5,progress:true,motion:true,logo:"",enableMusic:false,enableSound:false,musicVol:50,soundVol:70,bgMusic:"",transSound:"",enableVoice:false,elevenLabsApiKey:"",voiceId:"",voiceVol:80};
+var DEFAULTS={brand:"বাংলা গেজেটা",title:"আজকের শিরোনাম",date:"",outroTitle:"বিস্তারিত পড়ুন",outroSub:"banglagazeta.com",layout:"overlay",panel:"dark",accent:"#0a9b62",dur:5,progress:true,motion:true,logo:"",enableMusic:false,enableSound:false,musicVol:50,soundVol:70,bgMusic:"",transSound:"",enableVoice:false,voiceVol:80};
 var S=Object.assign({},DEFAULTS);
 var cards=SEED.map(function(c){return Object.assign({img:null,_el:null},c)});
 function persist(){try{localStorage.setItem(KEY,JSON.stringify({settings:S,cards:cards.map(function(c){return{on:c.on,cat:c.cat,head:c.head,blurb:c.blurb}})}))}catch(e){}}
@@ -277,20 +261,16 @@ function getLogo(){var src=logoSrc(),e=logoCache[src];if(!e){e=logoCache[src]={i
 function syncLogoUI(){$("logoImg").src=logoSrc();$("topLogo").innerHTML=logoInner(S.accent)}
 
 /* ---------- audio ---------- */
-var bgAudioEl=null,transAudioEl=null,prevSegIdx=-1,voiceAudioEl=null,voiceCache={};
+var bgAudioEl=null,transAudioEl=null,voiceAudioEl=null,prevSegIdx=-1,voiceCache={};
 function loadAudio(url){return new Promise(function(res){if(!url){res(null);return}var a=new Audio(url);a.loop=false;a.oncanplaythrough=function(){res(a)};a.onerror=function(){res(null)};a.load()})}
 async function initAudio(){if(S.bgMusic&&!bgAudioEl)bgAudioEl=await loadAudio(S.bgMusic);if(S.transSound&&!transAudioEl)transAudioEl=await loadAudio(S.transSound)}
 function playBgMusic(){if(S.enableMusic&&bgAudioEl){bgAudioEl.volume=(S.musicVol||50)/100;bgAudioEl.currentTime=0;bgAudioEl.play().catch(function(){})}}
 function stopBgMusic(){if(bgAudioEl){bgAudioEl.pause();bgAudioEl.currentTime=0}}
 function stopVoice(){if(voiceAudioEl){voiceAudioEl.pause();voiceAudioEl.currentTime=0}}
 function playTransSound(){if(S.enableSound&&transAudioEl){transAudioEl.volume=(S.soundVol||70)/100;transAudioEl.currentTime=0;transAudioEl.play().catch(function(){})}}
+async function fetchVoiceAudio(text){if(!text||!S.enableVoice)return null;var cacheKey=text.trim();if(voiceCache[cacheKey])return voiceCache[cacheKey];try{var res=await fetch("https://api.elevenlabs.io/v1/text-to-speech/9NcgBcStqYWKMY9RJwT0",{method:"POST",headers:{"xi-api-key":"sk_c6f0b778eec9b91e80fc23921b0b3470277fe1d75c319a66","Content-Type":"application/json"},body:JSON.stringify({text:text,model_id:"eleven_multilingual_v2",voice_settings:{stability:0.5,similarity_boost:0.75}})});if(!res.ok)return null;var blob=await res.blob();var url=URL.createObjectURL(blob);voiceCache[cacheKey]=url;return url}catch(e){console.error("Voice fetch error:",e);return null}}
+async function playVoice(text){if(!S.enableVoice||!text)return;stopVoice();var url=await fetchVoiceAudio(text);if(!url)return;voiceAudioEl=new Audio(url);voiceAudioEl.volume=(S.voiceVol||80)/100;voiceAudioEl.play().catch(function(){})}
 function updateAudioStatus(){var st=$("audioStatus");if(!S.bgMusic&&!S.transSound)st.textContent="No audio files loaded";else st.textContent=(S.bgMusic?"Music ":"")+(S.transSound?"Sound ":"")+"loaded"}
-
-/* ---------- ElevenLabs AI Voice ---------- */
-async function fetchElevenLabsVoices(){var apiKey=$("elevenLabsKey").value.trim();if(!apiKey){toast("Please enter your ElevenLabs API key");return}var st=$("voiceStatus");st.textContent="Fetching voices...";try{var res=await fetch("https://api.elevenlabs.io/v1/voices",{headers:{"xi-api-key":apiKey}});if(!res.ok)throw new Error("Failed to fetch voices");var data=await res.json();var select=$("voiceSelect");select.innerHTML="";data.voices.forEach(function(v){var opt=document.createElement("option");opt.value=v.voice_id;opt.textContent=v.name+(v.labels?" ("+v.labels+")":"");select.appendChild(opt)});$("voiceList").classList.remove("hidden");st.textContent="Found "+data.voices.length+" voices";toast("Voices loaded successfully")}catch(e){st.textContent="Error: "+e.message;toast("Failed to fetch voices")}}
-async function generateVoiceSpeech(text){if(!S.enableVoice||!S.elevenLabsApiKey||!S.voiceId)return null;var cacheKey=text;if(voiceCache[cacheKey])return voiceCache[cacheKey];try{var res=await fetch("https://api.elevenlabs.io/v1/text-to-speech/"+S.voiceId,{method:"POST",headers:{"Content-Type":"application/json","xi-api-key":S.elevenLabsApiKey},body:JSON.stringify({text:text,model_id:"eleven_multilingual_v2",voice_settings:{stability:0.5,similarity_boost:0.75}})});if(!res.ok)throw new Error("Voice generation failed");var blob=await res.blob();var url=URL.createObjectURL(blob);voiceCache[cacheKey]=url;return url}catch(e){console.error("Voice generation error:",e);return null}}
-async function playVoiceSpeech(text){if(!S.enableVoice)return;stopVoice();var url=await generateVoiceSpeech(text);if(url){voiceAudioEl=new Audio(url);voiceAudioEl.volume=(S.voiceVol||80)/100;voiceAudioEl.onended=function(){voiceAudioEl=null};voiceAudioEl.play().catch(function(){console.warn("Voice playback failed")})}}
-function updateVoiceUI(){$("elevenLabsKey").value=S.elevenLabsApiKey||"";$("voiceId").value=S.voiceId||"";$("voiceVol").value=S.voiceVol||80;$("voiceVolLabel").textContent=S.voiceVol||80;$("enableVoice").checked=S.enableVoice||false}
 
 /* ---------- canvas ---------- */
 var cv=$("cv"),ctx=cv.getContext("2d",{alpha:false});
@@ -387,15 +367,14 @@ function fmt(x){x=Math.max(0,Math.round(x));return Math.floor(x/60)+":"+String(x
 function renderTL(){var segs=segments();$("tl").innerHTML=segs.map(function(s,i){var lab=s.type==="intro"?"Intro":s.type==="outro"?"End":String(i);return'<button type="button" data-i="'+i+'" style="flex-grow:'+s.d+'" aria-label="Scene '+lab+'" class="transition-colors">'+lab+'</button>'}).join("")}
 function updateUI(){var T=total();$("scrub").value=String(Math.round(t/T*1000));$("time").textContent=fmt(t)+" / "+fmt(T);var q=segAt(t),b=$("tl").children;if(b.length!==q.segs.length)renderTL();for(var i=0;i<b.length;i++)b[i].className=i===q.i?"cur":""}
 $("tl").addEventListener("click",function(e){var b=e.target.closest("button");if(!b||recording)return;var i=Number(b.getAttribute("data-i")),segs=segments(),acc=0;for(var k=0;k<i;k++)acc+=segs[k].d;pause();t=acc+Math.min(1.4,segs[i].d-.01);redraw()});
-function tick(now){if(!playing)return;t+=(now-last)/1000;last=now;var T=total();if(t>=T){if(recording){t=T-.001;draw(t);updateUI();finishRec();return}t=0;stopBgMusic();stopVoice();prevSegIdx=-1}var q=segAt(t);if(q.i!==prevSegIdx){if(q.i>0&&q.i<q.segs.length-1&&S.enableSound){if(recording&&transSource&&transSource.mediaElement){transSource.mediaElement.currentTime=0;transSource.mediaElement.play().catch(function(){})}else{playTransSound()}}if(q.i===0&&S.enableMusic){if(recording&&bgSource&&bgSource.mediaElement){bgSource.mediaElement.currentTime=0;bgSource.mediaElement.play().catch(function(){})}else{playBgMusic()}}if(q.s.type==="card"&&q.s.c&&q.s.c.head&&S.enableVoice){if(recording&&voiceSource&&voiceSource.mediaElement&&generatedVoices[q.i]){voiceSource.mediaElement.src=generatedVoices[q.i];voiceSource.mediaElement.currentTime=0;voiceSource.mediaElement.play().catch(function(){})}else{playVoiceSpeech(q.s.c.head)}}prevSegIdx=q.i}draw(t);updateUI();raf=requestAnimationFrame(tick)}
+function tick(now){if(!playing)return;t+=(now-last)/1000;last=now;var T=total();if(t>=T){if(recording){t=T-.001;draw(t);updateUI();finishRec();return}t=0;stopBgMusic();stopVoice();prevSegIdx=-1}var q=segAt(t);if(q.i!==prevSegIdx){if(q.i>0&&q.i<q.segs.length-1&&S.enableSound){if(recording&&transSource&&transSource.mediaElement){transSource.mediaElement.currentTime=0;transSource.mediaElement.play().catch(function(){})}else{playTransSound()}}if(q.i===0&&S.enableMusic){if(recording&&bgSource&&bgSource.mediaElement){bgSource.mediaElement.currentTime=0;bgSource.mediaElement.play().catch(function(){})}else{playBgMusic()}}if(q.s.type==="card"&&q.s.c&&q.s.c.head){playVoice(q.s.c.head)}prevSegIdx=q.i}draw(t);updateUI();raf=requestAnimationFrame(tick)}
 function play(){if(playing)return;initAudio().then(function(){playing=true;last=performance.now();$("play").innerHTML='<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>';raf=requestAnimationFrame(tick);if(S.enableMusic)playBgMusic()})}
 function pause(){playing=false;cancelAnimationFrame(raf);$("play").innerHTML='<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';stopBgMusic();stopVoice()}
 function redraw(){draw(Math.min(t,total()-.001));updateUI()}
 
 /* ---------- recording ---------- */
-var recorder=null,chunks=[],lastBlob=null,lastExt="webm",resUrl=null,recMime="",audioCtx=null,bgSource=null,transSource=null,voiceSource=null,destNode=null,generatedVoices={};
+var recorder=null,chunks=[],lastBlob=null,lastExt="webm",resUrl=null,recMime="",audioCtx=null,bgSource=null,transSource=null,destNode=null;
 async function ensureFonts(){try{await Promise.all(["800","600","400"].map(function(w){return document.fonts.load(w+' 60px "Noto Sans Bengali"',"বাংলা গেজেটা ০১২৩৪৫৬৭৮৯")}))}catch(e){}}
-async function preGenerateVoices(){if(!S.enableVoice||!S.elevenLabsApiKey||!S.voiceId)return;generatedVoices={};var segs=segments();for(var i=0;i<segs.length;i++){if(segs[i].type==="card"&&segs[i].c&&segs[i].c.head){var text=segs[i].c.head;try{var res=await fetch("https://api.elevenlabs.io/v1/text-to-speech/"+S.voiceId,{method:"POST",headers:{"Content-Type":"application/json","xi-api-key":S.elevenLabsApiKey},body:JSON.stringify({text:text,model_id:"eleven_multilingual_v2",voice_settings:{stability:0.5,similarity_boost:0.75}})});if(res.ok){var blob=await res.blob();generatedVoices[i]=URL.createObjectURL(blob)}}catch(e){console.error("Failed to generate voice for segment",i,e)}}}}
 async function setupAudioForRecording(){
   if(!S.enableMusic&&!S.enableSound)return cv.captureStream(30);
   try{
@@ -425,16 +404,6 @@ async function setupAudioForRecording(){
       transGain.gain.value=S.soundVol/100;
       transSource.connect(transGain).connect(dest);
     }
-    if(S.enableVoice&&S.elevenLabsApiKey&&S.voiceId){
-      var voiceAudio=new Audio();
-      voiceAudio.loop=false;
-      voiceAudio.volume=(S.voiceVol||80)/100;
-      voiceAudio.crossOrigin="anonymous";
-      voiceSource=audioCtx.createMediaElementSource(voiceAudio);
-      var voiceGain=audioCtx.createGain();
-      voiceGain.gain.value=S.voiceVol/100;
-      voiceSource.connect(voiceGain).connect(dest);
-    }
     combinedTracks=combinedTracks.concat(dest.stream.getAudioTracks());
     return new MediaStream(combinedTracks);
   }catch(e){console.warn("Audio setup failed, recording video only",e);return cv.captureStream(30)}
@@ -447,7 +416,6 @@ async function startRec(){
   if(recording)return;
   if(typeof MediaRecorder==="undefined"||!cv.captureStream){toast("This browser can't record canvas video. Try Chrome, Edge or Safari 17+.");return}
   pause();await ensureFonts();await initAudio();
-  if(S.enableVoice){var st=$("renderStatus");st.textContent="Generating voice audio...";await preGenerateVoices()}
   showRenderModal();
   var cands=["video/mp4;codecs=avc1.640028","video/mp4;codecs=avc1","video/mp4","video/webm;codecs=vp9","video/webm;codecs=vp8","video/webm"];
   recMime=cands.find(function(m){try{return MediaRecorder.isTypeSupported(m)}catch(e){return false}})||"";
@@ -460,7 +428,7 @@ async function startRec(){
   recorder.start(250);playing=true;last=performance.now();raf=requestAnimationFrame(tick)}
 function finishRec(){
   playing=false;cancelAnimationFrame(raf);stopBgMusic();
-  if(audioCtx){try{audioCtx.close()}catch(e){}audioCtx=null;bgSource=null;transSource=null;voiceSource=null;destNode=null}
+  if(audioCtx){try{audioCtx.close()}catch(e){}audioCtx=null;bgSource=null;transSource=null;destNode=null}
   var type=(recorder&&recorder.mimeType)||recMime||"video/webm";
   recorder.onstop=function(){recording=false;lastBlob=new Blob(chunks,{type:type});lastExt=type.indexOf("mp4")>=0?"mp4":"webm";if(resUrl){try{URL.revokeObjectURL(resUrl)}catch(e){}}resUrl=URL.createObjectURL(lastBlob);updateRenderProgress(100,"Complete!");setTimeout(showRenderComplete,300);$("rec").disabled=false;$("play").disabled=false;$("scrub").disabled=false;$("play").innerHTML='<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'};
   try{recorder.requestData()}catch(e){}recorder.stop()}
@@ -491,18 +459,13 @@ $("exportT").addEventListener("click",function(){saveFile("news-reel-template.js
 $("importT").addEventListener("change",async function(e){var f=e.target.files&&e.target.files[0];if(!f)return;try{var o=JSON.parse(await f.text());if(!o||!o.settings||!Array.isArray(o.cards))throw 0;S=Object.assign({},DEFAULTS,o.settings);cards=await Promise.all(o.cards.map(async function(c){var img=typeof c.img==="string"&&c.img.indexOf("data:image/")===0?c.img:null;return{on:c.on!==false,cat:c.cat||"",head:c.head||"",blurb:c.blurb||"",img:img,_el:await loadEl(img)}}));syncSettings();changed();t=0;redraw();toast("Template imported")}catch(err){toast("That file isn't a reel template.")}e.target.value=""});
 
 /* ---------- settings ---------- */
-function syncSettings(){document.querySelectorAll("[data-s]").forEach(function(el){var k=el.getAttribute("data-s");if(el.type==="checkbox")el.checked=!!S[k];else el.value=S[k]});$("durLabel").textContent=String(S.dur);$("musicVolLabel").textContent=String(S.musicVol||50);$("soundVolLabel").textContent=String(S.soundVol||70);syncLogoUI();updateAudioStatus();updateVoiceUI()}
-document.querySelectorAll("[data-s]").forEach(function(el){el.addEventListener("input",function(){var k=el.getAttribute("data-s");S[k]=el.type==="checkbox"?el.checked:(k==="dur"||k==="musicVol"||k==="soundVol"?Number(el.value):el.value);if(k==="dur"){$("durLabel").textContent=String(S.dur);renderTL()}if(k==="musicVol"){$("musicVolLabel").textContent=String(S.musicVol);if(bgAudioEl)bgAudioEl.volume=S.musicVol/100}if(k==="soundVol"){$("soundVolLabel").textContent=String(S.soundVol);if(transAudioEl)transAudioEl.volume=S.soundVol/100}if(k==="accent")syncLogoUI();persist();redraw()})});
+function syncSettings(){document.querySelectorAll("[data-s]").forEach(function(el){var k=el.getAttribute("data-s");if(el.type==="checkbox")el.checked=!!S[k];else el.value=S[k]});$("durLabel").textContent=String(S.dur);$("musicVolLabel").textContent=String(S.musicVol||50);$("soundVolLabel").textContent=String(S.soundVol||70);$("voiceVolLabel").textContent=String(S.voiceVol||80);syncLogoUI();updateAudioStatus()}
+document.querySelectorAll("[data-s]").forEach(function(el){el.addEventListener("input",function(){var k=el.getAttribute("data-s");S[k]=el.type==="checkbox"?el.checked:(k==="dur"||k==="musicVol"||k==="soundVol"||k==="voiceVol"?Number(el.value):el.value);if(k==="dur"){$("durLabel").textContent=String(S.dur);renderTL()}if(k==="musicVol"){$("musicVolLabel").textContent=String(S.musicVol);if(bgAudioEl)bgAudioEl.volume=S.musicVol/100}if(k==="soundVol"){$("soundVolLabel").textContent=String(S.soundVol);if(transAudioEl)transAudioEl.volume=S.soundVol/100}if(k==="voiceVol"){$("voiceVolLabel").textContent=String(S.voiceVol);if(voiceAudioEl)voiceAudioEl.volume=S.voiceVol/100}if(k==="accent")syncLogoUI();persist();redraw()})});
 $("logoUp").addEventListener("change",function(e){var f=e.target.files&&e.target.files[0];if(!f)return;if(f.size>900000){toast("Logo is too large. Use a file under 900 KB.");return}var fr=new FileReader();fr.onload=function(){S.logo=String(fr.result);syncLogoUI();persist();redraw()};fr.readAsDataURL(f);e.target.value=""});
 $("logoReset").addEventListener("click",function(){S.logo="";syncLogoUI();persist();redraw()});
 $("bgMusicUp").addEventListener("change",function(e){var f=e.target.files&&e.target.files[0];if(!f)return;if(f.size>5000000){toast("Audio file is too large. Use a file under 5 MB.");return}var fr=new FileReader();fr.onload=function(){S.bgMusic=String(fr.result);bgAudioEl=null;syncSettings();persist();toast("Background music loaded")};fr.readAsDataURL(f);e.target.value=""});
 $("transSoundUp").addEventListener("change",function(e){var f=e.target.files&&e.target.files[0];if(!f)return;if(f.size>1000000){toast("Audio file is too large. Use a file under 1 MB.");return}var fr=new FileReader();fr.onload=function(){S.transSound=String(fr.result);transAudioEl=null;syncSettings();persist();toast("Transition sound loaded")};fr.readAsDataURL(f);e.target.value=""});
 $("audioReset").addEventListener("click",function(){S.bgMusic="";S.transSound="";bgAudioEl=null;transAudioEl=null;syncSettings();persist();toast("Audio files cleared")});
-$("fetchVoices").addEventListener("click",fetchElevenLabsVoices);
-$("voiceSelect").addEventListener("change",function(){S.voiceId=$("voiceSelect").value;persist()});
-$("voiceVol").addEventListener("input",function(){S.voiceVol=Number($("voiceVol").value);$("voiceVolLabel").textContent=S.voiceVol;persist()});
-$("enableVoice").addEventListener("change",function(){S.enableVoice=$("enableVoice").checked;persist()});
-$("elevenLabsKey").addEventListener("change",function(){S.elevenLabsApiKey=$("elevenLabsKey").value.trim();persist()});
 $("play").addEventListener("click",function(){if(playing)pause();else play()});
 $("scrub").addEventListener("input",function(e){pause();t=Number(e.target.value)/1000*total();redraw()});
 $("rec").addEventListener("click",startRec);
