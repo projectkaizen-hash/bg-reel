@@ -376,7 +376,7 @@ function redraw(){draw(Math.min(t,total()-.001));updateUI()}
 var recorder=null,chunks=[],lastBlob=null,lastExt="webm",resUrl=null,recMime="",audioCtx=null,bgSource=null,transSource=null,destNode=null;
 async function ensureFonts(){try{await Promise.all(["800","600","400"].map(function(w){return document.fonts.load(w+' 60px "Noto Sans Bengali"',"বাংলা গেজেটা ০১২৩৪৫৬৭৮৯")}))}catch(e){}}
 async function setupAudioForRecording(){
-  if(!S.enableMusic&&!S.enableSound)return cv.captureStream(30);
+  if(!S.enableMusic&&!S.enableSound&&!S.enableVoice)return cv.captureStream(30);
   try{
     audioCtx=new(window.AudioContext||window.webkitAudioContext)({latencyHint:"interactive"});
     var dest=audioCtx.createMediaStreamDestination();
@@ -425,13 +425,14 @@ async function startRec(){
   recording=true;t=0;prevSegIdx=-1;draw(0);updateUI();
   updateRenderProgress(5,"Initializing renderer...");
   var T=total();$("renderTime").textContent="Estimated time: ~"+Math.ceil(T)+"s";
-  recorder.start(250);playing=true;last=performance.now();raf=requestAnimationFrame(tick)}
+  recorder.start(1000);playing=true;last=performance.now();raf=requestAnimationFrame(tick)}
 function finishRec(){
   playing=false;cancelAnimationFrame(raf);stopBgMusic();
   if(audioCtx){try{audioCtx.close()}catch(e){}audioCtx=null;bgSource=null;transSource=null;destNode=null}
   var type=(recorder&&recorder.mimeType)||recMime||"video/webm";
   recorder.onstop=function(){recording=false;lastBlob=new Blob(chunks,{type:type});lastExt=type.indexOf("mp4")>=0?"mp4":"webm";if(resUrl){try{URL.revokeObjectURL(resUrl)}catch(e){}}resUrl=URL.createObjectURL(lastBlob);updateRenderProgress(100,"Complete!");setTimeout(showRenderComplete,300);$("rec").disabled=false;$("play").disabled=false;$("scrub").disabled=false;$("play").innerHTML='<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'};
-  try{recorder.requestData()}catch(e){}recorder.stop()}
+  try{recorder.requestData()}catch(e){}
+  setTimeout(function(){try{recorder.stop()}catch(e){console.error("Recorder stop error:",e)}},500)}
 async function saveFile(name,data){try{var blob=data instanceof Blob?data:new Blob([data],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){try{URL.revokeObjectURL(url)}catch(e){}},5000);toast("Saved");return true}catch(e){toast("Couldn't save: "+((e&&e.message)||"unknown error"));return false}}
 var toastTimer=0;
 function toast(m){var el=$("toast");el.textContent=m;el.classList.remove("hidden");clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.classList.add("hidden")},4200)}
